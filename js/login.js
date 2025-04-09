@@ -1,6 +1,6 @@
-const loginForm = document.getElementById("login-form");
+import { loginUser } from "./api.js";
 
-// fetch login and import function from api.js
+const loginForm = document.getElementById("login-form");
 
 loginForm.addEventListener("submit", async (event) => {
   event.preventDefault();
