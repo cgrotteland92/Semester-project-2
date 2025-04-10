@@ -10,7 +10,7 @@
     ></script>
     <title>Auction House</title>
   </head>
-  <body>
+  <body class="bg-gray-100">
     <nav class="flex justify-between items-center bg-black p-4 relative">
       <div class="logo">
         <a href="index.html" class="text-white text-xl no-underline"
@@ -49,9 +49,20 @@
         <li id="user-info" class="text-white block p-2"></li>
       </ul>
     </nav>
-    <main>
+    <main class="p-4">
       <h1 class="text-3xl text-green-500">Auction House</h1>
-      <div id="display-container"></div>
+      <section id="search-section" class="py-8 bg-white flex justify-center">
+        <form id="search-form" class="w-full max-w-md">
+          <input
+            type="text"
+            id="search-input"
+            placeholder="Search..."
+            required
+            class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-blue-300 bg-white text-black"
+          />
+        </form>
+      </section>
+      <div id="listing-container">Listings</div>
     </main>
     <script type="module" src="./js/nav.js" defer></script>
     <script type="module" src="./js/script.js" defer></script>
