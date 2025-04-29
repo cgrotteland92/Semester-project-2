@@ -1,5 +1,5 @@
 import { fetchPosts } from "./api.js";
-import { showSkeletonLoader } from "./skeletonLoader.js";
+import { showSkeletonLoader } from "./utils/skeletonLoader.js";
 
 const allPostsContainer = document.getElementById("listing-container");
 
@@ -8,7 +8,6 @@ const allPostsContainer = document.getElementById("listing-container");
  * @param {Function} fetchFunction - Either fetchPosts or fetchPostsFromFollowing.
  */
 async function displayPosts(fetchFunction) {
-  // Show the skeleton loader while waiting for API response
   //showSkeletonLoader();
   try {
     const postsResponse = await fetchFunction();
@@ -40,14 +39,8 @@ function renderPosts(postsResponse) {
     // Create and append title element
     const title = document.createElement("h2");
     title.textContent = post.title;
-    title.className = "text-lg font-semibold mb-2"; // Corrected variable
+    title.className = "text-lg font-semibold mb-2";
     postElement.appendChild(title);
-
-    // Description
-    const descriptionEl = document.createElement("p");
-    descriptionEl.textContent = post.description;
-    descriptionEl.className = "text-sm mb-2";
-    postElement.appendChild(descriptionEl);
 
     // Media element
     if (post.media && Array.isArray(post.media) && post.media.length > 0) {
@@ -58,7 +51,13 @@ function renderPosts(postsResponse) {
       postElement.appendChild(mediaImg);
     }
 
+    // Description
+    const descriptionEl = document.createElement("p");
+    descriptionEl.textContent = post.description;
+    descriptionEl.className = "text-sm mb-2";
+    postElement.appendChild(descriptionEl);
     // Tags
+
     if (post.tags && post.tags.length > 0) {
       const tagsEl = document.createElement("p");
       tagsEl.textContent = "Tags: " + post.tags.join(", ");
@@ -70,7 +69,7 @@ function renderPosts(postsResponse) {
     if (post.created) {
       const dateEl = document.createElement("p");
       dateEl.textContent =
-        "Created: " + new Date(post.created).toLocaleDateString();
+        "Listed: " + new Date(post.created).toLocaleDateString();
       dateEl.className = "text-sm text-gray-500 dark:text-gray-400 mb-3";
       postElement.appendChild(dateEl);
     }

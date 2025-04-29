@@ -10,7 +10,7 @@
     ></script>
     <title>Auction House</title>
   </head>
-  <body class="bg-gray-100">
+  <body class="bg-gray-100 overflow-x-hidden">
     <nav class="flex justify-between items-center bg-black p-4 relative">
       <div class="logo">
         <a href="index.html" class="text-white text-xl no-underline"
@@ -62,8 +62,16 @@
           />
         </form>
       </section>
-      <div id="listing-container">Listings</div>
+      <div
+        id="listing-container"
+        class="w-full max-w-[1000px] mx-auto my-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 px-4"
+      >
+        Listings
+      </div>
     </main>
+    <footer class="bg-black text-white text-center p-4 relative w-full">
+      <p>&copy; 2025 Auction House. All Rights Reserved.</p>
+    </footer>
     <script type="module" src="./js/nav.js" defer></script>
     <script type="module" src="./js/script.js" defer></script>
   </body>
