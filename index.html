@@ -10,7 +10,7 @@
     ></script>
     <title>Auction House</title>
   </head>
-  <body class="bg-gray-100 overflow-x-hidden">
+  <body class="bg-gray-100">
     <nav class="flex justify-between items-center bg-black p-4 relative">
       <div class="logo">
         <a href="index.html" class="text-white text-xl no-underline"
@@ -28,10 +28,6 @@
         id="nav-menu"
         class="list-none flex-col absolute top-full left-0 w-full bg-black p-4 hidden md:flex md:flex-row md:static md:w-auto md:p-0"
       >
-        <button id="theme-toggle" class="p-2 rounded bg-white text-gray-700">
-          <i id="theme-sun" class="fa-solid fa-sun"></i>
-          <i id="theme-moon" class="fa-solid fa-moon"></i>
-        </button>
         <li>
           <a
             href="index.html"
@@ -62,12 +58,44 @@
           />
         </form>
       </section>
+      <section id="new-listing-section" class="bg-red-500 mb-8">
+        <h2 class="text-2xl mb-4">New Listing</h2>
+        <div
+          id="new-listing-container"
+          class="relative w-full max-w-[1200px] mx-auto my-5 overflow-hidden"
+        >
+          <button
+            class="prev absolute left-2 top-1/2 -translate-y-1/2 z-10 p-2 bg-black text-white rounded-full"
+            aria-label="Previous"
+          >
+            ‹
+          </button>
+
+          <div
+            class="carousel-slide flex transition-transform duration-300 will-change-transform"
+          ></div>
+
+          <button
+            class="next absolute right-2 top-1/2 -translate-y-1/2 z-10 p-2 bg-black text-white rounded-full"
+            aria-label="Next"
+          >
+            ›
+          </button>
+        </div>
+      </section>
+
+      <section id="ending-soon-section" class="bg-green-500 mb-8">
+        <h2 class="text-2xl mb-4">Ending Soon</h2>
+        <div
+          id="ending-soon-container"
+          class="w-full max-w-[1200px] mx-auto my-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 px-4"
+        ></div>
+      </section>
+
       <div
         id="listing-container"
-        class="w-full max-w-[1000px] mx-auto my-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 px-4"
-      >
-        Listings
-      </div>
+        class="w-full max-w-[1200px] mx-auto my-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 px-4"
+      ></div>
     </main>
     <footer class="bg-black text-white text-center p-4 relative w-full">
       <p>&copy; 2025 Auction House. All Rights Reserved.</p>

@@ -1,89 +1,172 @@
 import { fetchPosts } from "./api.js";
-import { showSkeletonLoader } from "./utils/skeletonLoader.js";
+import { showMessage } from "./utils/message.js";
 
+const newListingContainer = document.getElementById("new-listing-container");
+const endingSoonContainer = document.getElementById("ending-soon-container");
 const allPostsContainer = document.getElementById("listing-container");
 
 /**
  * Fetches posts using the provided fetch function and renders them.
- * @param {Function} fetchFunction - Either fetchPosts or fetchPostsFromFollowing.
  */
 async function displayPosts(fetchFunction) {
-  //showSkeletonLoader();
   try {
     const postsResponse = await fetchFunction();
-
-    if (!postsResponse) {
+    if (!postsResponse || !Array.isArray(postsResponse.data)) {
       throw new Error("No posts available");
     }
-
-    renderPosts(postsResponse);
+    renderPosts(postsResponse.data);
   } catch (error) {
-    console.log(error);
-    console.error("Error displaying posts:", error.message);
-    showMessage(
-      allPostsContainer,
-      "Error loading posts. Please try again later."
+    console.error("Error displaying posts:", error);
+    [newListingContainer, endingSoonContainer, allPostsContainer].forEach((c) =>
+      showMessage(c, "Error loading posts. Please try again later.")
     );
   }
 }
 
-function renderPosts(postsResponse) {
-  const allPostsContainer = document.getElementById("listing-container");
-  allPostsContainer.innerHTML = "";
+/**
+ * Parses dates, splits into sections, and fires off render calls.
+ */
+function renderPosts(data) {
+  const posts = data.map((p) => ({
+    ...p,
+    created: new Date(p.created),
+    endsAt: new Date(p.endsAt),
+  }));
 
-  postsResponse.data.forEach((post) => {
-    const postElement = document.createElement("div");
-    postElement.className =
-      "bg-white border border-black dark:border-white text-black dark:text-white p-4 rounded-lg cursor-pointer mb-4";
+  const newListings = [...posts].sort((a, b) => b.created - a.created);
 
-    // Create and append title element
-    const title = document.createElement("h2");
-    title.textContent = post.title;
-    title.className = "text-lg font-semibold mb-2";
-    postElement.appendChild(title);
+  const now = new Date();
+  const endOfToday = new Date(now);
+  endOfToday.setHours(23, 59, 59, 999);
+  const endingToday = posts
+    .filter((p) => p.endsAt > now && p.endsAt <= endOfToday)
+    .sort((a, b) => a.endsAt - b.endsAt);
 
-    // Media element
-    if (post.media && Array.isArray(post.media) && post.media.length > 0) {
-      const mediaImg = document.createElement("img");
-      mediaImg.src = post.media[0].url;
-      mediaImg.alt = post.media[0].alt || "Post image";
-      mediaImg.className = "max-w-full h-auto my-5 mx-auto";
-      postElement.appendChild(mediaImg);
-    }
+  const allListings = newListings;
 
-    // Description
-    const descriptionEl = document.createElement("p");
-    descriptionEl.textContent = post.description;
-    descriptionEl.className = "text-sm mb-2";
-    postElement.appendChild(descriptionEl);
-    // Tags
+  initCarousel(newListings);
+  renderSection(endingToday, endingSoonContainer, "No listings ending today.");
+  renderSection(allListings, allPostsContainer, "No listings available.");
+}
 
-    if (post.tags && post.tags.length > 0) {
-      const tagsEl = document.createElement("p");
-      tagsEl.textContent = "Tags: " + post.tags.join(", ");
-      tagsEl.className = "text-xs text-gray-600 dark:text-gray-300 mb-2";
-      postElement.appendChild(tagsEl);
-    }
+function initCarousel(postsData) {
+  const latestPosts = postsData.slice(0, 9);
+  let carouselHTML = "";
+  latestPosts.forEach((post) => {
+    carouselHTML += `
+      <div class="carousel-item flex-shrink-0 w-64 px-2">
+        <div class="bg-white border border-black dark:border-white 
+                    text-black dark:text-white p-4 rounded-lg">
+          <h2 class="text-lg font-semibold mb-2">${post.title}</h2>
+          <p class="text-sm mb-2">
+            By ${
+              post.seller?.name || "Unknown"
+            } on ${post.created.toLocaleDateString()}
+          </p>
+          ${
+            post.media?.[0]
+              ? `<img src="${post.media[0].url}"
+                      alt="${post.media[0].alt || ""}"
+                      class="w-full h-40 object-cover mb-4 rounded" />`
+              : ""
+          }
+          <button 
+            class="read-more mt-2 px-4 py-2 bg-blue-500 text-white rounded"
+            onclick="goToPost('${post.id}')"
+          >
+            Read More
+          </button>
+        </div>
+      </div>`;
+  });
+  console.log(postsData);
 
-    // Creation date
-    if (post.created) {
-      const dateEl = document.createElement("p");
-      dateEl.textContent =
-        "Listed: " + new Date(post.created).toLocaleDateString();
-      dateEl.className = "text-sm text-gray-500 dark:text-gray-400 mb-3";
-      postElement.appendChild(dateEl);
-    }
+  const slideContainer = newListingContainer.querySelector(".carousel-slide");
+  slideContainer.innerHTML = carouselHTML;
 
-    // Bid count
-    if (post._count && typeof post._count.bids === "number") {
-      const bidCountEl = document.createElement("p");
-      bidCountEl.textContent = "Bids: " + post._count.bids;
-      bidCountEl.className = "text-xs text-gray-600 dark:text-gray-300";
-      postElement.appendChild(bidCountEl);
-    }
+  let currentIndex = 0;
+  const totalItems = latestPosts.length;
+  const items = slideContainer.querySelectorAll(".carousel-item");
 
-    allPostsContainer.appendChild(postElement);
+  const style = getComputedStyle(items[0]);
+  const itemWidth =
+    items[0].offsetWidth +
+    parseFloat(style.marginLeft) +
+    parseFloat(style.marginRight);
+
+  const prevBtn = newListingContainer.querySelector(".prev");
+  const nextBtn = newListingContainer.querySelector(".next");
+
+  prevBtn.onclick = () => {
+    currentIndex = (currentIndex - 1 + totalItems) % totalItems;
+    slideContainer.style.transform = `translateX(${
+      -currentIndex * itemWidth
+    }px)`;
+  };
+  nextBtn.onclick = () => {
+    currentIndex = (currentIndex + 1) % totalItems;
+    slideContainer.style.transform = `translateX(${
+      -currentIndex * itemWidth
+    }px)`;
+  };
+}
+
+function renderSection(posts, container, emptyMessage) {
+  const MAX_LEN = 100;
+  container.innerHTML = "";
+
+  if (posts.length === 0) {
+    container.innerHTML = `<p class="text-gray-500 italic">${emptyMessage}</p>`;
+    return;
+  }
+
+  posts.forEach((post) => {
+    const card = document.createElement("div");
+    card.className =
+      "bg-white border border-black dark:border-white text-black dark:text-white " +
+      "p-4 rounded-lg mb-4 cursor-pointer";
+
+    const desc = post.description || "";
+    const shortDesc =
+      desc.length > MAX_LEN ? desc.slice(0, MAX_LEN) + "…" : desc;
+
+    card.innerHTML = `
+      <h2 class="text-lg font-semibold mb-2">${post.title}</h2>
+
+      <p class="text-sm mb-2">${shortDesc}</p>
+
+      ${
+        post.media?.[0]
+          ? `<img src="${post.media[0].url}"
+                  alt="${post.media[0].alt || ""}"
+                  class="max-w-full h-auto mb-4 mx-auto rounded" />`
+          : ""
+      }
+
+      ${
+        desc.length > MAX_LEN
+          ? `<button class="text-blue-500 text-xs mb-2" onclick="goToPost('${post.id}')">
+               Read more
+             </button>`
+          : ""
+      }
+
+      <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">
+        Listed: ${post.created.toLocaleDateString()}
+      </p>
+      <p class="text-xs text-gray-500 dark:text-gray-400 mb-3">
+        Ends: ${post.endsAt.toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        })}
+      </p>
+      <p class="text-xs text-gray-600 dark:text-gray-300">
+        Bids: ${post._count?.bids ?? 0}
+      </p>
+    `;
+
+    container.appendChild(card);
   });
 }
 
-displayPosts(fetchPosts);
+displayPosts(() => fetchPosts({ _seller: true, _bids: true }));
