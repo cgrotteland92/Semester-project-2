@@ -60,41 +60,32 @@
       </section>
       <section id="new-listing-section" class="bg-red-500 mb-8">
         <h2 class="text-2xl mb-4">New Listing</h2>
-        <div
-          id="new-listing-container"
-          class="relative w-full max-w-[1200px] mx-auto my-5 overflow-hidden"
-        >
+
+        <div class="relative w-full max-w-[1000px] mx-auto my-5">
           <button
-            class="prev absolute left-2 top-1/2 -translate-y-1/2 z-10 p-2 bg-black text-white rounded-full"
+            id="prevNew"
+            class="absolute left-0 top-1/2 -translate-y-1/2 z-10 p-2 bg-black text-white rounded-full"
             aria-label="Previous"
           >
             ‹
           </button>
-
           <div
-            class="carousel-slide flex transition-transform duration-300 will-change-transform"
+            id="newListingCarousel"
+            class="flex overflow-x-auto snap-x snap-mandatory scroll-smooth scrollbar-hide"
           ></div>
 
           <button
-            class="next absolute right-2 top-1/2 -translate-y-1/2 z-10 p-2 bg-black text-white rounded-full"
+            id="nextNew"
+            class="absolute right-0 top-1/2 -translate-y-1/2 z-10 p-2 bg-black text-white rounded-full"
             aria-label="Next"
           >
             ›
           </button>
         </div>
       </section>
-
-      <section id="ending-soon-section" class="bg-green-500 mb-8">
-        <h2 class="text-2xl mb-4">Ending Soon</h2>
-        <div
-          id="ending-soon-container"
-          class="w-full max-w-[1200px] mx-auto my-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 px-4"
-        ></div>
-      </section>
-
       <div
         id="listing-container"
-        class="w-full max-w-[1200px] mx-auto my-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 px-4"
+        class="relative z-0 w-full max-w-[1200px] mx-auto my-5 mt-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 px-4"
       ></div>
     </main>
     <footer class="bg-black text-white text-center p-4 relative w-full">
