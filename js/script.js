@@ -1,9 +1,9 @@
-import { fetchPosts } from "./api.js";
+// script.js
+import { fetchPosts, createPost } from "./api.js";
 import { showMessage } from "./utils/message.js";
 import { formatTimeRemaining } from "./utils/timeRemaining.js";
 import { showSkeletonLoader } from "./utils/skeletonLoader.js";
 
-// Correct container references
 const newListingContainer = document.getElementById("new-listing-container");
 const allPostsContainer = document.getElementById("listing-container");
 
@@ -19,12 +19,82 @@ function renderEndsAt(date) {
     : `Ends in: ${formatTimeRemaining(date)}`;
 }
 
+document.addEventListener("DOMContentLoaded", () => {
+  const btnToggle = document.getElementById("btnToggleCreatePost");
+  const formSection = document.getElementById("createPostSection");
+  const form = document.getElementById("formCreatePost");
+  const msgBanner = document.getElementById("postMessage");
+  const submitButton = document.getElementById("btnSubmitPost");
+
+  btnToggle.addEventListener("click", () => {
+    formSection.classList.toggle("hidden");
+    msgBanner.classList.add("hidden");
+    msgBanner.textContent = "";
+  });
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    submitButton.disabled = true;
+    submitButton.textContent = "Submitting…";
+    msgBanner.classList.add("hidden");
+
+    // Get form values by element ID instead of form.name
+    const titleInput = document.getElementById("postTitle");
+    const descriptionInput = document.getElementById("postDescription");
+    const tagsInput = document.getElementById("postTags");
+    const mediaUrlInput = document.getElementById("postMediaUrl");
+    const mediaAltInput = document.getElementById("postMediaAlt");
+    const endsAtInput = document.getElementById("postEndsAt");
+
+    const endsAtRaw = endsAtInput.value;
+    const postData = {
+      title: titleInput.value.trim(),
+      description: descriptionInput.value.trim(),
+      tags: tagsInput.value
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean),
+      media: mediaUrlInput.value
+        ? [{ url: mediaUrlInput.value.trim(), alt: mediaAltInput.value.trim() }]
+        : [],
+      endsAt: new Date(endsAtRaw).toISOString(),
+    };
+
+    try {
+      const result = await createPost(postData);
+      console.log("Post creation result:", result);
+
+      if (result) {
+        await displayPosts(() => fetchPosts({ _seller: true, _bids: true }));
+        showMessage(msgBanner, "Post created successfully!", false);
+        form.reset();
+
+        // Scroll to the top of the listings
+        allPostsContainer.scrollIntoView({ behavior: "smooth" });
+
+        // Ensure the filter is set to "newest"
+        const sortFilter = document.getElementById("sort-filter");
+        if (sortFilter) sortFilter.value = "newest";
+      } else {
+        throw new Error("No result returned from createPost");
+      }
+    } catch (err) {
+      console.error("Error creating post:", err);
+      showMessage(msgBanner, "Failed to create listing: " + err.message, true);
+    } finally {
+      submitButton.disabled = false;
+      submitButton.textContent = "Submit";
+    }
+  });
+});
+
 /**
  * Fetches posts using the provided fetch function and renders them,
  * showing skeleton loaders while waiting.
  */
 async function displayPosts(fetchFunction) {
-  // Show skeleton loaders immediately
+  console.log("Fetching posts...");
   if (newListingContainer) {
     newListingContainer.innerHTML = "";
     showSkeletonLoader(newListingContainer, 5);
@@ -36,6 +106,7 @@ async function displayPosts(fetchFunction) {
 
   try {
     const postsResponse = await fetchFunction();
+    console.log("Fetched posts:", postsResponse);
     if (!postsResponse || !Array.isArray(postsResponse.data)) {
       throw new Error("No posts available");
     }
@@ -43,27 +114,32 @@ async function displayPosts(fetchFunction) {
     setupFilter();
   } catch (error) {
     console.error("Error displaying posts:", error);
-    [newListingContainer, allPostsContainer].forEach(
-      (c) => c && showMessage(c, "Error loading posts. Please try again later.")
-    );
+    // Display error banners in both sections
+    [newListingContainer, allPostsContainer].forEach((c) => {
+      if (c)
+        showMessage(c, "Error loading posts. Please try again later.", true);
+    });
   }
 }
 
 /**
- * Parses dates, splits into sections, and fires off render calls.
+ * Parses dates, sorts posts newest-first, and renders sections.
  */
 function renderPosts(data) {
+  console.log("Rendering posts with data:", data);
   const posts = data.map((p) => ({
     ...p,
     created: new Date(p.created),
     endsAt: new Date(p.endsAt),
   }));
 
-  const newListings = [...posts].sort((a, b) => b.created - a.created);
-  allListings = [...posts];
+  // Sort descending by creation date
+  const sortedPosts = posts.sort((a, b) => b.created - a.created);
+  allListings = sortedPosts;
+  console.log("Sorted posts:", sortedPosts);
 
-  initCarousel(newListings);
-  renderSection(allListings, allPostsContainer, "No listings available.");
+  initCarousel(sortedPosts);
+  renderSection(sortedPosts, allPostsContainer, "No listings available.");
 }
 
 /**
@@ -75,19 +151,15 @@ function setupFilter() {
 
   sortFilter.addEventListener("change", () => {
     const value = sortFilter.value;
-    let filtered = [...allListings];
     const now = Date.now();
+    let filtered = [...allListings];
 
-    switch (value) {
-      case "newest":
-        filtered.sort((a, b) => b.created - a.created);
-        break;
-      case "oldest":
-        filtered.sort((a, b) => a.created - b.created);
-        break;
-      case "ended":
-        filtered = filtered.filter((p) => p.endsAt.getTime() < now);
-        break;
+    if (value === "newest") {
+      filtered.sort((a, b) => b.created - a.created);
+    } else if (value === "oldest") {
+      filtered.sort((a, b) => a.created - b.created);
+    } else if (value === "ended") {
+      filtered = filtered.filter((p) => p.endsAt.getTime() < now);
     }
 
     renderSection(filtered, allPostsContainer, "No listings available.");
@@ -106,36 +178,36 @@ function initCarousel(posts) {
     .slice(0, 9)
     .map(
       (post) => `
-    <div class="carousel-slide snap-start flex-shrink-0 w-full px-2">
-      <div class="bg-white border border-black text-black p-4 rounded-lg">
-        <h2 class="text-lg font-semibold mb-2 break-all">
+      <div class="carousel-slide snap-start flex-shrink-0 w-full px-2">
+        <div class="bg-white border border-black text-black p-4 rounded-lg">
+          <h2 class="text-lg font-semibold mb-2 break-all">
+            ${
+              post.title.length > MAX_TITLE
+                ? post.title.slice(0, MAX_TITLE) + "…"
+                : post.title
+            }
+          </h2>
+          <p class="text-sm mb-2">
+            By ${
+              post.seller?.name || "Unknown"
+            } on ${post.created.toLocaleDateString()}
+          </p>
+          <p class="text-sm mb-2 text-red-600">
+            ${renderEndsAt(post.endsAt)}
+          </p>
           ${
-            post.title.length > MAX_TITLE
-              ? post.title.slice(0, MAX_TITLE) + "…"
-              : post.title
+            post.media?.[0]
+              ? `<img src="${post.media[0].url}" alt="${
+                  post.media[0].alt || ""
+                }" class="w-full max-h-64 object-contain mb-4 rounded" />`
+              : ""
           }
-        </h2>
-        <p class="text-sm mb-2">
-          By ${
-            post.seller?.name || "Unknown"
-          } on ${post.created.toLocaleDateString()}
-        </p>
-        <p class="text-sm mb-2 text-red-600">
-          ${renderEndsAt(post.endsAt)}
-        </p>
-        ${
-          post.media?.[0]
-            ? `<img src="${post.media[0].url}" alt="${
-                post.media[0].alt || ""
-              }" class="w-full max-h-64 object-contain mb-4 rounded" />`
-            : ""
-        }
-        <button
-          class="mt-2 px-4 py-2 bg-blue-500 text-white rounded"
-          onclick="goToPost('${post.id}')"
-        >Read More</button>
-      </div>
-    </div>`
+          <button
+            class="mt-2 px-4 py-2 bg-blue-500 text-white rounded"
+            onclick="goToPost('${post.id}')"
+          >Read More</button>
+        </div>
+      </div>`
     )
     .join("");
 

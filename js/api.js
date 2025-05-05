@@ -69,7 +69,7 @@ export async function fetchPosts(params = {}) {
     return await response.json();
   } catch (error) {
     console.error("Error fetching posts:", error);
-    throw error; // rethrow so displayPosts can catch
+    throw error;
   }
 }
 
@@ -84,5 +84,29 @@ export async function fetchSinglePost(postId) {
     return await response.json();
   } catch (error) {
     console.error("Error fetching post:", error.message);
+  }
+}
+
+export async function createPost(postData) {
+  try {
+    const response = await fetch(`${BASE_API_URL}/auction/listings`, {
+      method: "POST",
+      headers,
+      body: JSON.stringify(postData),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(
+        `Failed to create listing: ${response.status} ${response.statusText} ${
+          errorData.message || ""
+        }`
+      );
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Error creating post:", error.message);
+    throw error;
   }
 }
