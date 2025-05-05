@@ -3,7 +3,101 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Profile | Auction House</title>
   </head>
-  <body></body>
+  <body>
+    <header>
+      <nav class="flex justify-between items-center bg-black p-4 relative">
+        <div class="logo">
+          <a href="index.html" class="text-white text-xl no-underline"
+            >Auction House</a
+          >
+        </div>
+        <input type="checkbox" id="menu-toggle" class="hidden" />
+        <label
+          for="menu-toggle"
+          class="cursor-pointer text-white text-2xl md:hidden"
+        >
+          <i class="fas fa-bars"></i>
+        </label>
+        <ul
+          id="nav-menu"
+          class="list-none flex-col absolute top-full left-0 w-full bg-black p-4 hidden md:flex md:flex-row md:static md:w-auto md:p-0"
+        >
+          <li>
+            <a
+              href="index.html"
+              class="text-white text-base no-underline block p-2 transition-colors duration-300 ease-in-out hover:text-gray-500"
+              >Home</a
+            >
+          </li>
+          <li>
+            <a
+              href="/accounts/profile.html"
+              class="text-white text-base no-underline block p-2 transition-colors duration-300 ease-in-out hover:text-gray-500"
+              >Profile</a
+            >
+          </li>
+          <li id="user-info" class="text-white block p-2"></li>
+        </ul>
+      </nav>
+    </header>
+    <main id="profile-main" class="max-w-[1200px] w-[95%] mx-auto mt-20 p-0">
+      <section
+        id="profile-header"
+        class="rounded-[12px] overflow-hidden mb-8 relative pb-8"
+      >
+        <img
+          id="profile-banner"
+          alt="Banner"
+          class="w-full h-[340px] object-cover block"
+        />
+        <img
+          id="profile-avatar"
+          alt="Avatar"
+          class="absolute left-8 top-[230px] w-[120px] h-[120px] rounded-full border-white object-cover"
+        />
+        <h1 id="profile-name" class="font-bold text-2xl mt-20 mx-8 mb-4">
+          Profile Name
+        </h1>
+        <p id="profile-bio">Bio goes here...</p>
+        <p id="profile-counts"></p>
+      </section>
+      <section id="edit-profile">
+        <form id="edit-profile-form" style="display: none">
+          <label>
+            Name:
+            <input type="text" id="edit-name" />
+          </label>
+          <label>
+            Bio:
+            <textarea id="edit-bio"></textarea>
+          </label>
+          <label>
+            Banner URL:
+            <input type="url" id="edit-banner-url" />
+          </label>
+          <label>
+            Avatar URL:
+            <input type="url" id="edit-avatar-url" />
+          </label>
+          <button type="submit" class="btn">Save Changes</button>
+          <button type="button" id="cancel-edit" class="btn">Cancel</button>
+        </form>
+      </section>
+      <section
+        id="posts-section"
+        class="bg-white dark:bg-[#1F1F23] p-8 rounded-[12px] mt-8"
+      >
+        <h2 class="font-bold mb-6">Posts</h2>
+        <div
+          id="posts-grid"
+          class="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-6"
+        ></div>
+      </section>
+    </main>
+    <footer class="bg-black text-white text-center p-4 relative w-full">
+      <p>&copy; 2025 Auction House. All Rights Reserved.</p>
+    </footer>
+  </body>
 </html>

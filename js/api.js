@@ -49,17 +49,27 @@ export async function loginUser(userData) {
 
 /* --------------------- POSTS ENDPOINTS --------------------- */
 
-export async function fetchPosts() {
+export async function fetchPosts(params = {}) {
+  const query = new URLSearchParams();
+  Object.entries(params).forEach(([key, val]) => {
+    if (val !== undefined && val !== null) {
+      query.append(key, String(val));
+    }
+  });
+  const url = `${BASE_API_URL}/auction/listings?${query.toString()}`;
+
   try {
-    const response = await fetch(`${BASE_API_URL}/auction/listings`, {
+    const response = await fetch(url, {
       method: "GET",
       headers,
     });
-    if (!response.ok)
-      throw new Error("Failed to get listings: " + response.status);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch listings (${response.status})`);
+    }
     return await response.json();
   } catch (error) {
-    console.error("Error fetching posts:", error.message);
+    console.error("Error fetching posts:", error);
+    throw error; // rethrow so displayPosts can catch
   }
 }
 
