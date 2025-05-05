@@ -3,8 +3,8 @@ const BASE_API_URL = "https://v2.api.noroff.dev";
 export const headers = {
   "Content-Type": "application/json",
   Authorization:
-    "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiY2dyb3R0ZWxhbmQiLCJlbWFpbCI6ImNocmdybzAyMTIyQHN0dWQubm9yb2ZmLm5vIiwiaWF0IjoxNzM3NDc3MDA5fQ.dHnh1IVZQAFkYS-n0eeQsnBpM1tZB2tLkvtQu5JLRtQ",
-  "X-Noroff-API-Key": "38bdac0c-896c-444c-b4c6-ebbb84f542ea",
+    "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiY2dyb3R0ZWxhbmQiLCJlbWFpbCI6ImNocmdybzAyMTIyQHN0dWQubm9yb2ZmLm5vIiwiaWF0IjoxNzQ0MzAwNDgyfQ.n3AMABfJbCbzD3ROEmeh77Gn7ETHGPkA-rY6rvfQ9VE",
+  "X-Noroff-API-Key": "0b0117c2-c40e-44f7-aa5a-6f18167b328c",
 };
 /* --------------------- AUTH & USER ENDPOINTS --------------------- */
 
@@ -44,5 +44,45 @@ export async function loginUser(userData) {
     return await response.json();
   } catch (error) {
     console.error("Error logging in user:", error.message);
+  }
+}
+
+/* --------------------- POSTS ENDPOINTS --------------------- */
+
+export async function fetchPosts(params = {}) {
+  const query = new URLSearchParams();
+  Object.entries(params).forEach(([key, val]) => {
+    if (val !== undefined && val !== null) {
+      query.append(key, String(val));
+    }
+  });
+  const url = `${BASE_API_URL}/auction/listings?${query.toString()}`;
+
+  try {
+    const response = await fetch(url, {
+      method: "GET",
+      headers,
+    });
+    if (!response.ok) {
+      throw new Error(`Failed to fetch listings (${response.status})`);
+    }
+    return await response.json();
+  } catch (error) {
+    console.error("Error fetching posts:", error);
+    throw error; // rethrow so displayPosts can catch
+  }
+}
+
+export async function fetchSinglePost(postId) {
+  try {
+    const response = await fetch(`${BASE_API_URL}/auction/listings/${postId}`, {
+      method: "GET",
+      headers,
+    });
+    if (!response.ok)
+      throw new Error("Failed to get listing: " + response.status);
+    return await response.json();
+  } catch (error) {
+    console.error("Error fetching post:", error.message);
   }
 }

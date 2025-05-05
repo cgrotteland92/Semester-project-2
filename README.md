@@ -1,6 +1,10 @@
 # Semester-project-2
+
 Auction house website
 
+
+ADD META NAME DESCRIPTION TO EVERY PAGE
+=======
 
 # Remember to edit README and add screenshot.
 
@@ -49,8 +53,7 @@ Auction house website
 ### Profile Endpoints
 
 - **All Profiles:**  
-  `GET /social/profiles` – Retrieves a list of all profiles.
-
+  `GET /social/profiles` – Retrieves a list of all profile
 - **Single Profile:**  
   `GET /social/profiles/<name>` – Retrieves a single profile by name, including additional properties if needed.
 
@@ -88,3 +91,4 @@ Auction house website
 ```bash
   npm run dev
 ```
+

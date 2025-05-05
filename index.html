@@ -10,49 +10,104 @@
     ></script>
     <title>Auction House</title>
   </head>
-  <body>
-    <nav class="flex justify-between items-center bg-black p-4 relative">
-      <div class="logo">
-        <a href="index.html" class="text-white text-xl no-underline"
-          >Auction House</a
+  <body class="bg-gray-100">
+    <header>
+      <nav class="flex justify-between items-center bg-black p-4 relative">
+        <div class="logo">
+          <a href="index.html" class="text-white text-xl no-underline"
+            >Auction House</a
+          >
+        </div>
+        <input type="checkbox" id="menu-toggle" class="hidden" />
+        <label
+          for="menu-toggle"
+          class="cursor-pointer text-white text-2xl md:hidden"
         >
-      </div>
-      <input type="checkbox" id="menu-toggle" class="hidden" />
-      <label
-        for="menu-toggle"
-        class="cursor-pointer text-white text-2xl md:hidden"
-      >
-        <i class="fas fa-bars"></i>
-      </label>
-      <ul
-        id="nav-menu"
-        class="list-none flex-col absolute top-full left-0 w-full bg-black p-4 hidden md:flex md:flex-row md:static md:w-auto md:p-0"
-      >
-        <button id="theme-toggle" class="p-2 rounded bg-white text-gray-700">
-          <i id="theme-sun" class="fa-solid fa-sun"></i>
-          <i id="theme-moon" class="fa-solid fa-moon"></i>
-        </button>
-        <li>
-          <a
-            href="index.html"
-            class="text-white text-base no-underline block p-2 transition-colors duration-300 ease-in-out hover:text-gray-500"
-            >Home</a
-          >
-        </li>
-        <li>
-          <a
-            href="/accounts/profile.html"
-            class="text-white text-base no-underline block p-2 transition-colors duration-300 ease-in-out hover:text-gray-500"
-            >Profile</a
-          >
-        </li>
-        <li id="user-info" class="text-white block p-2"></li>
-      </ul>
-    </nav>
-    <main>
+          <i class="fas fa-bars"></i>
+        </label>
+        <ul
+          id="nav-menu"
+          class="list-none flex-col absolute top-full left-0 w-full bg-black p-4 hidden md:flex md:flex-row md:static md:w-auto md:p-0"
+        >
+          <li>
+            <a
+              href="index.html"
+              class="text-white text-base no-underline block p-2 transition-colors duration-300 ease-in-out hover:text-gray-500"
+              >Home</a
+            >
+          </li>
+          <li>
+            <a
+              href="/accounts/profile.html"
+              class="text-white text-base no-underline block p-2 transition-colors duration-300 ease-in-out hover:text-gray-500"
+              >Profile</a
+            >
+          </li>
+          <li id="user-info" class="text-white block p-2"></li>
+        </ul>
+      </nav>
+    </header>
+    <main class="p-4">
       <h1 class="text-3xl text-green-500">Auction House</h1>
-      <div id="display-container"></div>
+      <section id="search-section" class="py-8 bg-white flex justify-center">
+        <form id="search-form" class="w-full max-w-md">
+          <input
+            type="text"
+            id="search-input"
+            placeholder="Search..."
+            required
+            class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-blue-300 bg-white text-black"
+          />
+        </form>
+      </section>
+
+      <section id="new-listing-section" class="bg-red-500 mb-8">
+        <h2 class="text-2xl mb-4">New Listing</h2>
+
+        <div class="relative w-full max-w-[1000px] mx-auto my-5">
+          <button
+            id="prevNew"
+            class="absolute left-0 top-1/2 -translate-y-1/2 z-10 p-2 bg-black text-white rounded-full"
+            aria-label="Previous"
+          >
+            ‹
+          </button>
+          <div
+            id="newListingCarousel"
+            class="flex overflow-x-auto snap-x snap-mandatory scroll-smooth scrollbar-hide"
+          ></div>
+
+          <button
+            id="nextNew"
+            class="absolute right-0 top-1/2 -translate-y-1/2 z-10 p-2 bg-black text-white rounded-full"
+            aria-label="Next"
+          >
+            ›
+          </button>
+        </div>
+      </section>
+      <section
+        id="filter-section"
+        class="max-w-[1200px] mx-auto my-4 px-4 flex items-center gap-2"
+      >
+        <label for="sort-filter" class="text-gray-700">Show:</label>
+        <select
+          id="sort-filter"
+          class="p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
+        >
+          <option value="newest">New</option>
+          <option value="oldest">Old</option>
+          <option value="ended">Ended</option>
+        </select>
+      </section>
+      <div
+        id="listing-container"
+        class="relative z-0 w-full max-w-[1200px] mx-auto my-5 mt-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 px-4"
+      ></div>
     </main>
+    <footer class="bg-black text-white text-center p-4 relative w-full">
+      <p>&copy; 2025 Auction House. All Rights Reserved.</p>
+    </footer>
     <script type="module" src="./js/nav.js" defer></script>
     <script type="module" src="./js/script.js" defer></script>
   </body>

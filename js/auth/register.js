@@ -1,4 +1,4 @@
-import { registerUser } from "./api.js";
+import { registerUser } from "../api.js";
 
 const registerForm = document.getElementById("register-form");
 

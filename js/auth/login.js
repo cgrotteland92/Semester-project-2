@@ -1,4 +1,4 @@
-import { loginUser } from "./api.js";
+import { loginUser } from "../api.js";
 
 const loginForm = document.getElementById("login-form");
 
