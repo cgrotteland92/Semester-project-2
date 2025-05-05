@@ -1,5 +1,5 @@
-export function showSkeletonLoader(container) {
-  container.innerHTML = `
+export function showSkeletonLoader(container, count = 1) {
+  const single = `
         <div class="bg-white p-4 rounded-lg border border-black animate-pulse">
           <div class="flex items-center mb-4">
             <div class="w-12 h-12 bg-gray-300 rounded-full"></div>
@@ -14,4 +14,5 @@ export function showSkeletonLoader(container) {
           <div class="h-4 bg-gray-300 rounded"></div>
         </div>
       `;
+  container.innerHTML = Array(count).fill(single).join("");
 }

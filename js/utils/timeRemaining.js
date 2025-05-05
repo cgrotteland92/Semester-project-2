@@ -1,4 +1,4 @@
-function formatTimeRemaining(endDate) {
+export function formatTimeRemaining(endDate) {
   const now = new Date();
   const diff = endDate - now;
   if (diff <= 0) return "Ended";

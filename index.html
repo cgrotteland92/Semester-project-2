@@ -11,40 +11,42 @@
     <title>Auction House</title>
   </head>
   <body class="bg-gray-100">
-    <nav class="flex justify-between items-center bg-black p-4 relative">
-      <div class="logo">
-        <a href="index.html" class="text-white text-xl no-underline"
-          >Auction House</a
+    <header>
+      <nav class="flex justify-between items-center bg-black p-4 relative">
+        <div class="logo">
+          <a href="index.html" class="text-white text-xl no-underline"
+            >Auction House</a
+          >
+        </div>
+        <input type="checkbox" id="menu-toggle" class="hidden" />
+        <label
+          for="menu-toggle"
+          class="cursor-pointer text-white text-2xl md:hidden"
         >
-      </div>
-      <input type="checkbox" id="menu-toggle" class="hidden" />
-      <label
-        for="menu-toggle"
-        class="cursor-pointer text-white text-2xl md:hidden"
-      >
-        <i class="fas fa-bars"></i>
-      </label>
-      <ul
-        id="nav-menu"
-        class="list-none flex-col absolute top-full left-0 w-full bg-black p-4 hidden md:flex md:flex-row md:static md:w-auto md:p-0"
-      >
-        <li>
-          <a
-            href="index.html"
-            class="text-white text-base no-underline block p-2 transition-colors duration-300 ease-in-out hover:text-gray-500"
-            >Home</a
-          >
-        </li>
-        <li>
-          <a
-            href="/accounts/profile.html"
-            class="text-white text-base no-underline block p-2 transition-colors duration-300 ease-in-out hover:text-gray-500"
-            >Profile</a
-          >
-        </li>
-        <li id="user-info" class="text-white block p-2"></li>
-      </ul>
-    </nav>
+          <i class="fas fa-bars"></i>
+        </label>
+        <ul
+          id="nav-menu"
+          class="list-none flex-col absolute top-full left-0 w-full bg-black p-4 hidden md:flex md:flex-row md:static md:w-auto md:p-0"
+        >
+          <li>
+            <a
+              href="index.html"
+              class="text-white text-base no-underline block p-2 transition-colors duration-300 ease-in-out hover:text-gray-500"
+              >Home</a
+            >
+          </li>
+          <li>
+            <a
+              href="/accounts/profile.html"
+              class="text-white text-base no-underline block p-2 transition-colors duration-300 ease-in-out hover:text-gray-500"
+              >Profile</a
+            >
+          </li>
+          <li id="user-info" class="text-white block p-2"></li>
+        </ul>
+      </nav>
+    </header>
     <main class="p-4">
       <h1 class="text-3xl text-green-500">Auction House</h1>
       <section id="search-section" class="py-8 bg-white flex justify-center">
@@ -58,6 +60,7 @@
           />
         </form>
       </section>
+
       <section id="new-listing-section" class="bg-red-500 mb-8">
         <h2 class="text-2xl mb-4">New Listing</h2>
 
@@ -82,6 +85,20 @@
             ›
           </button>
         </div>
+      </section>
+      <section
+        id="filter-section"
+        class="max-w-[1200px] mx-auto my-4 px-4 flex items-center gap-2"
+      >
+        <label for="sort-filter" class="text-gray-700">Show:</label>
+        <select
+          id="sort-filter"
+          class="p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
+        >
+          <option value="newest">New</option>
+          <option value="oldest">Old</option>
+          <option value="ended">Ended</option>
+        </select>
       </section>
       <div
         id="listing-container"
