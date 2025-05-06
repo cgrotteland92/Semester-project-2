@@ -2,132 +2,141 @@ const BASE_API_URL = "https://v2.api.noroff.dev";
 
 export const headers = {
   "Content-Type": "application/json",
-  Authorization:
-    "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiY2dyb3R0ZWxhbmQiLCJlbWFpbCI6ImNocmdybzAyMTIyQHN0dWQubm9yb2ZmLm5vIiwiaWF0IjoxNzQ0MzAwNDgyfQ.n3AMABfJbCbzD3ROEmeh77Gn7ETHGPkA-rY6rvfQ9VE",
-  "X-Noroff-API-Key": "0b0117c2-c40e-44f7-aa5a-6f18167b328c",
+  "X-Noroff-API-Key": "709242f2-a89a-4bd9-b050-1aa5b87af76b",
 };
+
+/**
+ * If the user is logged in, return { Authorization: 'Bearer …' }, else {}
+ */
+function authHeaders() {
+  const stored = localStorage.getItem("user");
+  if (!stored) return {};
+  const { accessToken } = JSON.parse(stored);
+  return accessToken ? { Authorization: `Bearer ${accessToken}` } : {};
+}
 
 /* --------------------- AUTH & USER ENDPOINTS --------------------- */
 
 /**
  * Register a new user.
- * @param {Object} userData - The data for registration.
- * @returns {Promise<Object>} - The API response with created user info.
+ * @param {Object} userData
+ * @returns {Promise<Object>} new user profile (no token)
  */
 export async function registerUser(userData) {
-  const response = await fetch(`${BASE_API_URL}/auth/register`, {
+  const res = await fetch(`${BASE_API_URL}/auth/register`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: { ...headers },
     body: JSON.stringify(userData),
   });
 
-  if (!response.ok) {
-    const errorDetails = await response.text().catch(() => "");
-    throw new Error(
-      `Registration failed: ${response.status} ${response.statusText} - ${errorDetails}`
-    );
+  const body = await res.json().catch(() => null);
+  if (!res.ok) {
+    const errorMsg =
+      body?.errors?.[0]?.message ||
+      body?.message ||
+      `Registration failed: ${res.status} ${res.statusText}`;
+    throw new Error(errorMsg);
   }
 
-  return response.json();
+  return body.data;
 }
 
 /**
  * Login a user.
- * @param {Object} userData - The login credentials.
- * @returns {Promise<Object>} - The API response with JWT token.
+ * @param {Object} userData
+ * @returns {Promise<Object>} user profile including accessToken
  */
 export async function loginUser(userData) {
-  const response = await fetch(`${BASE_API_URL}/auth/login`, {
+  const res = await fetch(`${BASE_API_URL}/auth/login`, {
     method: "POST",
-    headers,
+    headers: { ...headers },
     body: JSON.stringify(userData),
   });
 
-  if (!response.ok) {
-    const errorBody = await response.text().catch(() => "");
+  if (!res.ok) {
+    const errText = await res.text().catch(() => "");
     throw new Error(
-      `Login failed: ${response.status} ${response.statusText} - ${errorBody}`
+      `Login failed: ${res.status} ${res.statusText} – ${errText}`
     );
   }
 
-  return response.json();
+  const json = await res.json();
+  console.log("🔍 loginUser raw payload:", json);
+
+  const payload = json.data;
+  const token = payload.accessToken;
+  if (!token) throw new Error("Login succeeded but no token returned.");
+
+  // Store the entire user profile (with accessToken) in localStorage
+  localStorage.setItem("user", JSON.stringify(payload));
+  console.log("🔒 Stored user/token in localStorage:", token);
+
+  return payload;
 }
 
 /* --------------------- LISTINGS ENDPOINTS --------------------- */
 
 /**
  * Fetch auction listings.
- * @param {Object} params - Query parameters as key/value pairs.
- * @returns {Promise<Object>} - The API response with listings data.
+ * @param {Object} params
+ * @returns {Promise<Object>} listings data
  */
 export async function fetchPosts(params = {}) {
-  const queryParams = new URLSearchParams();
-  Object.entries(params).forEach(([key, value]) => {
-    if (value !== undefined && value !== null) {
-      queryParams.append(key, String(value));
-    }
-  });
-  const queryString = queryParams.toString()
-    ? `?${queryParams.toString()}`
-    : "";
-  const url = `${BASE_API_URL}/auction/listings${queryString}`;
+  const qs = new URLSearchParams(params).toString();
+  const url = `${BASE_API_URL}/auction/listings${qs ? `?${qs}` : ""}`;
 
-  const response = await fetch(url, {
-    method: "GET",
-    headers,
+  const res = await fetch(url, {
+    headers: { ...headers, ...authHeaders() },
   });
-
-  if (!response.ok) {
-    const errorDetails = await response.text().catch(() => "");
+  if (!res.ok) {
+    const details = await res.text().catch(() => "");
     throw new Error(
-      `Failed to fetch listings: ${response.status} ${response.statusText} - ${errorDetails}`
+      `Failed to fetch listings: ${res.status} ${res.statusText} – ${details}`
     );
   }
 
-  return response.json();
+  return res.json();
 }
 
 /**
- * Fetch a single auction listing by ID.
- * @param {string} postId - The ID of the listing.
- * @returns {Promise<Object>} - The API response with listing data.
+ * Fetch a single listing by ID.
+ * @param {string} postId
+ * @returns {Promise<Object>} listing data
  */
 export async function fetchSinglePost(postId) {
   const url = `${BASE_API_URL}/auction/listings/${postId}`;
-  const response = await fetch(url, {
-    method: "GET",
-    headers,
+  const res = await fetch(url, {
+    headers: { ...headers, ...authHeaders() },
   });
-
-  if (!response.ok) {
-    const errorDetails = await response.text().catch(() => "");
+  if (!res.ok) {
+    const details = await res.text().catch(() => "");
     throw new Error(
-      `Failed to fetch listing ${postId}: ${response.status} ${response.statusText} - ${errorDetails}`
+      `Failed to fetch listing ${postId}: ${res.status} ${res.statusText} – ${details}`
     );
   }
-
-  return response.json();
+  return res.json();
 }
 
 /**
  * Create a new auction listing.
- * @param {Object} postData - The listing payload.
- * @returns {Promise<Object>} - The API response with created listing data.
+ * @param {Object} postData
+ * @returns {Promise<Object>} created listing
  */
 export async function createPost(postData) {
-  const response = await fetch(`${BASE_API_URL}/auction/listings`, {
+  const res = await fetch(`${BASE_API_URL}/auction/listings`, {
     method: "POST",
-    headers,
+    headers: { ...headers, ...authHeaders() },
     body: JSON.stringify(postData),
   });
 
-  const body = await response.json().catch(() => null);
-  if (!response.ok) {
+  const body = await res.json().catch(() => null);
+  if (!res.ok) {
     const errorMsg =
-      (body && (body.message || body.error)) ||
-      `${response.status} ${response.statusText}`;
+      body?.errors?.[0]?.message ||
+      body?.message ||
+      `${res.status} ${res.statusText}`;
     throw new Error(
-      `Failed to create listing: ${response.status} ${response.statusText} - ${errorMsg}`
+      `Failed to create listing: ${res.status} ${res.statusText} – ${errorMsg}`
     );
   }
 

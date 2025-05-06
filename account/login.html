@@ -8,47 +8,45 @@
       src="https://kit.fontawesome.com/ff0f99a23c.js"
       crossorigin="anonymous"
     ></script>
-    <title>Document</title>
+    <title>Login | Auction House</title>
   </head>
   <body>
-    <nav class="flex justify-between items-center bg-black p-4 relative">
-      <div class="logo">
-        <a href="index.html" class="text-white text-xl no-underline"
-          >Auction House</a
+    <header>
+      <nav class="flex justify-between items-center bg-black p-4 relative">
+        <div class="logo">
+          <a href="/index.html" class="text-white text-xl no-underline"
+            >Auction House</a
+          >
+        </div>
+        <input type="checkbox" id="menu-toggle" class="hidden" />
+        <label
+          for="menu-toggle"
+          class="cursor-pointer text-white text-2xl md:hidden"
         >
-      </div>
-      <input type="checkbox" id="menu-toggle" class="hidden" />
-      <label
-        for="menu-toggle"
-        class="cursor-pointer text-white text-2xl md:hidden"
-      >
-        <i class="fas fa-bars"></i>
-      </label>
-      <ul
-        id="nav-menu"
-        class="list-none flex-col absolute top-full left-0 w-full bg-black p-4 hidden md:flex md:flex-row md:static md:w-auto md:p-0"
-      >
-        <button id="theme-toggle" class="p-2 rounded bg-white text-gray-700">
-          <i id="theme-sun" class="fa-solid fa-sun"></i>
-          <i id="theme-moon" class="fa-solid fa-moon"></i>
-        </button>
-        <li>
-          <a
-            href="index.html"
-            class="text-white text-base no-underline block p-2 transition-colors duration-300 ease-in-out hover:text-gray-500"
-            >Home</a
-          >
-        </li>
-        <li>
-          <a
-            href="/accounts/profile.html"
-            class="text-white text-base no-underline block p-2 transition-colors duration-300 ease-in-out hover:text-gray-500"
-            >Profile</a
-          >
-        </li>
-        <li id="user-info" class="text-white block p-2"></li>
-      </ul>
-    </nav>
+          <i class="fas fa-bars"></i>
+        </label>
+        <ul
+          id="nav-menu"
+          class="list-none flex-col absolute top-full left-0 w-full bg-black p-4 hidden md:flex md:flex-row md:static md:w-auto md:p-0"
+        >
+          <li>
+            <a
+              href="/index.html"
+              class="text-white text-base no-underline block p-2 transition-colors duration-300 ease-in-out hover:text-gray-500"
+              >Home</a
+            >
+          </li>
+          <li>
+            <a
+              href="/account/profile.html"
+              class="text-white text-base no-underline block p-2 transition-colors duration-300 ease-in-out hover:text-gray-500"
+              >Profile</a
+            >
+          </li>
+          <li id="user-info" class="text-white block p-2"></li>
+        </ul>
+      </nav>
+    </header>
     <main
       id="login-main"
       class="flex flex-col items-center justify-center min-h-screen p-5 bg-gray-50 dark:bg-[#1F1F23] text-black dark:text-white"
