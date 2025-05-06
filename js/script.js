@@ -288,4 +288,11 @@ function renderSection(posts, container, emptyMessage) {
   });
 }
 
-displayPosts(() => fetchPosts({ _seller: true, _bids: true }));
+const stored = localStorage.getItem("user");
+const user = stored ? JSON.parse(stored) : null;
+const filter =
+  user && user.name
+    ? { seller: user.name, _seller: true, _bids: true }
+    : { _seller: true, _bids: true };
+
++displayPosts(() => fetchPosts(filter));
