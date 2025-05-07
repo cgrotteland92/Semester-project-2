@@ -1,4 +1,4 @@
-import { fetchPosts, createPost } from "./api.js";
+import { fetchPosts } from "./api.js";
 import { showMessage } from "./utils/message.js";
 import { formatTimeRemaining } from "./utils/timeRemaining.js";
 import { showSkeletonLoader } from "./utils/skeletonLoader.js";
@@ -17,73 +17,6 @@ function renderEndsAt(date) {
     ? "Ended"
     : `Ends in: ${formatTimeRemaining(date)}`;
 }
-
-document.addEventListener("DOMContentLoaded", () => {
-  const btnToggle = document.getElementById("btnToggleCreatePost");
-  const formSection = document.getElementById("createPostSection");
-  const form = document.getElementById("formCreatePost");
-  const msgBanner = document.getElementById("postMessage");
-  const submitButton = document.getElementById("btnSubmitPost");
-
-  btnToggle.addEventListener("click", () => {
-    formSection.classList.toggle("hidden");
-    msgBanner.classList.add("hidden");
-    msgBanner.textContent = "";
-  });
-
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
-
-    submitButton.disabled = true;
-    submitButton.textContent = "Submitting…";
-    msgBanner.classList.add("hidden");
-
-    const titleInput = document.getElementById("postTitle");
-    const descriptionInput = document.getElementById("postDescription");
-    const tagsInput = document.getElementById("postTags");
-    const mediaUrlInput = document.getElementById("postMediaUrl");
-    const mediaAltInput = document.getElementById("postMediaAlt");
-    const endsAtInput = document.getElementById("postEndsAt");
-
-    const endsAtRaw = endsAtInput.value;
-    const postData = {
-      title: titleInput.value.trim(),
-      description: descriptionInput.value.trim(),
-      tags: tagsInput.value
-        .split(",")
-        .map((s) => s.trim())
-        .filter(Boolean),
-      media: mediaUrlInput.value
-        ? [{ url: mediaUrlInput.value.trim(), alt: mediaAltInput.value.trim() }]
-        : [],
-      endsAt: new Date(endsAtRaw).toISOString(),
-    };
-
-    try {
-      const result = await createPost(postData);
-      console.log("Post creation result:", result);
-
-      if (result) {
-        await displayPosts(() => fetchPosts({ _seller: true, _bids: true }));
-        showMessage(msgBanner, "Post created successfully!", false);
-        form.reset();
-
-        allPostsContainer.scrollIntoView({ behavior: "smooth" });
-
-        const sortFilter = document.getElementById("sort-filter");
-        if (sortFilter) sortFilter.value = "newest";
-      } else {
-        throw new Error("No result returned from createPost");
-      }
-    } catch (err) {
-      console.error("Error creating post:", err);
-      showMessage(msgBanner, "Failed to create listing: " + err.message, true);
-    } finally {
-      submitButton.disabled = false;
-      submitButton.textContent = "Submit";
-    }
-  });
-});
 
 /**
  * Fetches posts using the provided fetch function and renders them,

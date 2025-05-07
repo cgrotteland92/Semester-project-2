@@ -34,7 +34,8 @@
           </li>
           <li>
             <a
-              href="/account/index.html"
+              id="nav-profile-link"
+              href="/account/profile.html"
               class="text-white text-base no-underline block p-2 transition-colors duration-300 ease-in-out hover:text-gray-500"
               >Profile</a
             >
@@ -51,41 +52,92 @@
         <img
           id="profile-banner"
           alt="Banner"
-          class="w-full h-[340px] object-cover block"
+          class="w-full h-[340px] object-cover block bg-gray-200"
         />
         <img
           id="profile-avatar"
           alt="Avatar"
-          class="absolute left-8 top-[230px] w-[120px] h-[120px] rounded-full border-white object-cover"
+          class="absolute left-8 top-[230px] w-[120px] h-[120px] rounded-full border-4 border-white object-cover bg-white"
         />
-        <h1 id="profile-name" class="font-bold text-2xl mt-20 mx-8 mb-4">
-          Profile Name
+        <h1 id="profile-name" class="font-bold text-2xl mt-20 mx-8 mb-2">
+          Loading…
         </h1>
-        <p id="profile-bio">Bio goes here...</p>
-        <p id="profile-counts"></p>
+        <p id="profile-email" class="text-gray-600 mx-8 mb-2"></p>
+        <p id="profile-bio" class="mx-8 text-gray-700"></p>
+        <div
+          id="profile-counts"
+          class="mt-4 flex space-x-6 mx-8 text-center text-gray-800"
+        >
+          <div>
+            <p id="count-listings" class="text-xl font-semibold">0</p>
+            <p class="text-gray-600">Listings</p>
+          </div>
+          <div>
+            <p id="count-wins" class="text-xl font-semibold">0</p>
+            <p class="text-gray-600">Wins</p>
+          </div>
+          <div>
+            <p id="count-credits" class="text-xl font-semibold">0</p>
+            <p class="text-gray-600">Credits</p>
+          </div>
+        </div>
       </section>
-      <section id="edit-profile">
-        <form id="edit-profile-form" style="display: none">
-          <label>
-            Name:
-            <input type="text" id="edit-name" />
-          </label>
-          <label>
-            Bio:
-            <textarea id="edit-bio"></textarea>
-          </label>
-          <label>
-            Banner URL:
-            <input type="url" id="edit-banner-url" />
-          </label>
-          <label>
-            Avatar URL:
-            <input type="url" id="edit-avatar-url" />
-          </label>
-          <button type="submit" class="btn">Save Changes</button>
-          <button type="button" id="cancel-edit" class="btn">Cancel</button>
+      <div id="edit-profile" class="mt-8">
+        <!-- Edit button will be inserted here by JS -->
+        <form
+          id="edit-profile-form"
+          class="bg-white p-6 rounded-lg shadow-md"
+          style="display: none"
+        >
+          <h3 class="text-xl font-semibold mb-4">Edit Profile</h3>
+
+          <div class="mb-4">
+            <label for="edit-bio" class="block text-gray-700 mb-1">Bio</label>
+            <textarea
+              id="edit-bio"
+              class="w-full border rounded-md p-2"
+            ></textarea>
+          </div>
+
+          <div class="mb-4">
+            <label for="edit-avatar-url" class="block text-gray-700 mb-1"
+              >Avatar URL</label
+            >
+            <input
+              type="url"
+              id="edit-avatar-url"
+              class="w-full border rounded-md p-2"
+            />
+          </div>
+
+          <div class="mb-4">
+            <label for="edit-banner-url" class="block text-gray-700 mb-1"
+              >Banner URL</label
+            >
+            <input
+              type="url"
+              id="edit-banner-url"
+              class="w-full border rounded-md p-2"
+            />
+          </div>
+
+          <div class="flex justify-between">
+            <button
+              type="button"
+              id="cancel-edit"
+              class="bg-gray-300 text-gray-800 py-2 px-4 rounded-md hover:bg-gray-400"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              class="bg-black text-white py-2 px-4 rounded-md hover:bg-gray-800"
+            >
+              Save Changes
+            </button>
+          </div>
         </form>
-      </section>
+      </div>
       <section
         id="createPostContainer"
         class="max-w-[600px] my-5 mx-auto text-center flex flex-col items-center"
@@ -188,5 +240,8 @@
     <footer class="bg-black text-white text-center p-4 relative w-full">
       <p>&copy; 2025 Auction House. All Rights Reserved.</p>
     </footer>
+    <script type="module" src="../js/nav.js" defer></script>
+    <script type="module" src="../js/auth/auth.js" defer></script>
+    <script type="module" src="../js/auth/profile.js" defer></script>
   </body>
 </html>
