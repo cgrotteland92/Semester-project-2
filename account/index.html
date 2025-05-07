@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../css/output.css" />
     <title>Profile | Auction House</title>
   </head>
   <body>
@@ -86,9 +87,97 @@
         </form>
       </section>
       <section
-        id="posts-section"
-        class="bg-white dark:bg-[#1F1F23] p-8 rounded-[12px] mt-8"
+        id="createPostContainer"
+        class="max-w-[600px] my-5 mx-auto text-center flex flex-col items-center"
       >
+        <button
+          id="btnToggleCreatePost"
+          class="bg-white text-black py-2 px-4 rounded-md border border-black hover:bg-black hover:text-white transition-colors duration-300"
+        >
+          Create a Post
+        </button>
+
+        <section
+          id="createPostSection"
+          class="hidden mt-4 w-full bg-white p-5 rounded-lg shadow-md"
+        >
+          <h2 class="text-xl font-semibold mb-4">
+            Please fill in details for your listing.
+          </h2>
+
+          <div id="postMessage" class="mb-4 text-sm hidden"></div>
+
+          <form id="formCreatePost" class="flex flex-col gap-3">
+            <label for="postTitle" class="font-bold"
+              >Title:<sup class="text-red-600">*</sup></label
+            >
+            <input
+              type="text"
+              id="postTitle"
+              name="title"
+              placeholder="Post Title"
+              required
+              class="w-full p-2 border rounded-md bg-white text-black"
+            />
+
+            <label for="postDescription" class="font-bold">Description:</label>
+            <textarea
+              id="postDescription"
+              name="description"
+              placeholder="Write your post here..."
+              class="w-full p-2 border rounded-md min-h-[120px] resize-y bg-white text-black"
+            ></textarea>
+
+            <label for="postTags" class="font-bold">Tags:</label>
+            <input
+              type="text"
+              id="postTags"
+              name="tags"
+              placeholder="tech, news"
+              class="w-full p-2 border rounded-md bg-white text-black"
+            />
+
+            <label for="postMediaUrl" class="font-bold">Media URL:</label>
+            <input
+              type="url"
+              id="postMediaUrl"
+              name="mediaUrl"
+              placeholder="https://url.com/image.jpg"
+              class="w-full p-2 border rounded-md bg-white text-black"
+            />
+
+            <label for="postMediaAlt" class="font-bold">Media Alt Text:</label>
+            <input
+              type="text"
+              id="postMediaAlt"
+              name="mediaAlt"
+              placeholder="Image description"
+              class="w-full p-2 border rounded-md bg-whitetext-black"
+            />
+
+            <label for="postEndsAt" class="font-bold"
+              >Ends At:<sup class="text-red-600">*</sup></label
+            >
+            <input
+              type="datetime-local"
+              id="postEndsAt"
+              name="endsAt"
+              required
+              class="w-full p-2 border rounded-md bg-white text-black"
+            />
+
+            <button
+              id="btnSubmitPost"
+              type="submit"
+              class="bg-white text-black py-2 px-4 rounded-md border border-black hover:bg-black hover:text-white transition-colors duration-300"
+            >
+              Submit
+            </button>
+          </form>
+        </section>
+      </section>
+
+      <section id="posts-section" class="bg-white p-8 rounded-[12px] mt-8">
         <h2 class="font-bold mb-6">Posts</h2>
         <div
           id="posts-grid"

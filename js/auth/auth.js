@@ -1,5 +1,3 @@
-// auth.js
-
 /**
  * Gets the logged-in user data from localStorage.
  * @returns {Object|null} The user data if valid JSON, or null otherwise.
