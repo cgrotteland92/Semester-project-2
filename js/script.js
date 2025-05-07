@@ -1,4 +1,3 @@
-// script.js
 import { fetchPosts, createPost } from "./api.js";
 import { showMessage } from "./utils/message.js";
 import { formatTimeRemaining } from "./utils/timeRemaining.js";
@@ -39,7 +38,6 @@ document.addEventListener("DOMContentLoaded", () => {
     submitButton.textContent = "Submitting…";
     msgBanner.classList.add("hidden");
 
-    // Get form values by element ID instead of form.name
     const titleInput = document.getElementById("postTitle");
     const descriptionInput = document.getElementById("postDescription");
     const tagsInput = document.getElementById("postTags");
@@ -70,10 +68,8 @@ document.addEventListener("DOMContentLoaded", () => {
         showMessage(msgBanner, "Post created successfully!", false);
         form.reset();
 
-        // Scroll to the top of the listings
         allPostsContainer.scrollIntoView({ behavior: "smooth" });
 
-        // Ensure the filter is set to "newest"
         const sortFilter = document.getElementById("sort-filter");
         if (sortFilter) sortFilter.value = "newest";
       } else {
@@ -189,7 +185,7 @@ function initCarousel(posts) {
           </h2>
           <p class="text-sm mb-2">
             By ${
-              post.seller?.name || "Unknown"
+              post._seller?.name || "Unknown"
             } on ${post.created.toLocaleDateString()}
           </p>
           <p class="text-sm mb-2 text-red-600">
@@ -295,4 +291,4 @@ const filter =
     ? { seller: user.name, _seller: true, _bids: true }
     : { _seller: true, _bids: true };
 
-+displayPosts(() => fetchPosts(filter));
+displayPosts(() => fetchPosts(filter));
