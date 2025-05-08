@@ -24,7 +24,7 @@ export function logoutUser() {
 
 /**
  * Renders the user menu based on login status.
- * @param {HTMLElement} userInfoElement - The container (e.g., a <ul>) to populate.
+ * @param {HTMLElement} userInfoElement - Populates the user info element.
  */
 export function displayLoggedInUser(userInfoElement) {
   userInfoElement.textContent = "";
