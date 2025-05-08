@@ -83,7 +83,6 @@
         </div>
       </section>
       <div id="edit-profile" class="mt-8">
-        <!-- Edit button will be inserted here by JS -->
         <form
           id="edit-profile-form"
           class="bg-white p-6 rounded-lg shadow-md"
@@ -139,94 +138,114 @@
         </form>
       </div>
       <section
-        id="createPostContainer"
-        class="max-w-[600px] my-5 mx-auto text-center flex flex-col items-center"
+        id="create-listing-section"
+        class="bg-white rounded-lg shadow-md p-6 mt-8"
       >
-        <button
-          id="btnToggleCreatePost"
-          class="bg-white text-black py-2 px-4 rounded-md border border-black hover:bg-black hover:text-white transition-colors duration-300"
-        >
-          Create a Post
-        </button>
-
-        <section
-          id="createPostSection"
-          class="hidden mt-4 w-full bg-white p-5 rounded-lg shadow-md"
-        >
-          <h2 class="text-xl font-semibold mb-4">
-            Please fill in details for your listing.
+        <form id="create-listing-form" style="display: none" class="space-y-6">
+          <h2 class="text-2xl font-bold mb-4 text-center">
+            Create New Listing
           </h2>
 
-          <div id="postMessage" class="mb-4 text-sm hidden"></div>
-
-          <form id="formCreatePost" class="flex flex-col gap-3">
-            <label for="postTitle" class="font-bold"
-              >Title:<sup class="text-red-600">*</sup></label
+          <div
+            id="create-feedback"
+            class="mb-4 p-4 rounded-md"
+            style="display: none"
+          ></div>
+          <div>
+            <label
+              for="listing-title"
+              class="block text-sm font-medium text-gray-700 mb-1"
             >
+              Title *
+            </label>
             <input
               type="text"
-              id="postTitle"
-              name="title"
-              placeholder="Post Title"
+              id="listing-title"
+              name="listing-title"
               required
-              class="w-full p-2 border rounded-md bg-white text-black"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
-
-            <label for="postDescription" class="font-bold">Description:</label>
-            <textarea
-              id="postDescription"
-              name="description"
-              placeholder="Write your post here..."
-              class="w-full p-2 border rounded-md min-h-[120px] resize-y bg-white text-black"
-            ></textarea>
-
-            <label for="postTags" class="font-bold">Tags:</label>
-            <input
-              type="text"
-              id="postTags"
-              name="tags"
-              placeholder="tech, news"
-              class="w-full p-2 border rounded-md bg-white text-black"
-            />
-
-            <label for="postMediaUrl" class="font-bold">Media URL:</label>
-            <input
-              type="url"
-              id="postMediaUrl"
-              name="mediaUrl"
-              placeholder="https://url.com/image.jpg"
-              class="w-full p-2 border rounded-md bg-white text-black"
-            />
-
-            <label for="postMediaAlt" class="font-bold">Media Alt Text:</label>
-            <input
-              type="text"
-              id="postMediaAlt"
-              name="mediaAlt"
-              placeholder="Image description"
-              class="w-full p-2 border rounded-md bg-whitetext-black"
-            />
-
-            <label for="postEndsAt" class="font-bold"
-              >Ends At:<sup class="text-red-600">*</sup></label
+          </div>
+          <div>
+            <label
+              for="listing-description"
+              class="block text-sm font-medium text-gray-700 mb-1"
             >
+              Description
+            </label>
+            <textarea
+              id="listing-description"
+              name="listing-description"
+              rows="4"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            ></textarea>
+          </div>
+          <div>
+            <label
+              for="listing-tags"
+              class="block text-sm font-medium text-gray-700 mb-1"
+            >
+              Tags
+            </label>
+            <input
+              type="text"
+              id="listing-tags"
+              name="listing-tags"
+              placeholder="vintage, console, gaming"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">
+              Media
+            </label>
+            <div class="space-y-2">
+              <div class="flex gap-2">
+                <input
+                  type="url"
+                  class="media-url flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="https://example.com/image.jpg"
+                />
+                <input
+                  type="text"
+                  class="media-alt flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="Alt text"
+                />
+              </div>
+            </div>
+          </div>
+          <div>
+            <label
+              for="listing-endsAt"
+              class="block text-sm font-medium text-gray-700 mb-1"
+            >
+              Auction End Date *
+            </label>
             <input
               type="datetime-local"
-              id="postEndsAt"
-              name="endsAt"
+              id="listing-endsAt"
+              name="listing-endsAt"
               required
-              class="w-full p-2 border rounded-md bg-white text-black"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
+          </div>
 
+          <div class="flex justify-between mt-6">
             <button
-              id="btnSubmitPost"
-              type="submit"
-              class="bg-white text-black py-2 px-4 rounded-md border border-black hover:bg-black hover:text-white transition-colors duration-300"
+              id="cancel-create-listing"
+              type="button"
+              class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400"
             >
-              Submit
+              Cancel
             </button>
-          </form>
-        </section>
+            <button
+              type="submit"
+              class="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              Create Listing
+            </button>
+          </div>
+        </form>
       </section>
 
       <section id="posts-section" class="bg-white p-8 rounded-[12px] mt-8">

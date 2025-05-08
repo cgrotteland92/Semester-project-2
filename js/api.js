@@ -117,6 +117,49 @@ export async function loginUser(userData) {
 
 /* --------------------- POSTS ENDPOINTS --------------------- */
 
+/**
+ * Create a new auction listing.
+ * @param {Object} listingData - The listing data to create
+ * @param {string} listingData.title - Title of the listing (required)
+ * @param {string} [listingData.description] - Description of the listing
+ * @param {Array<string>} [listingData.tags] - Array of tags for the listing
+ * @param {Array<string>} [listingData.media] - Array of media URLs for the listing
+ * @param {string} listingData.endsAt - ISO date string for when the auction ends (required)
+ * @returns {Promise<Object>} - The created listing data
+ */
+export async function createListing(listingData) {
+  try {
+    // Validate required fields
+    if (!listingData.title) {
+      throw new Error("Listing title is required");
+    }
+
+    if (!listingData.endsAt) {
+      throw new Error("Auction end date is required");
+    }
+
+    const response = await fetch(`${BASE_API_URL}/auction/listings`, {
+      method: "POST",
+      headers,
+      body: JSON.stringify(listingData),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(
+        `Failed to create listing (${response.status}): ${
+          errorData.errors?.[0]?.message || response.statusText
+        }`
+      );
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Error creating listing:", error.message);
+    throw error;
+  }
+}
+
 export async function fetchPosts(params = {}) {
   const query = new URLSearchParams();
   Object.entries(params).forEach(([key, val]) => {

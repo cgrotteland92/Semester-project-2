@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="css/output.css" />
+    <script
+      src="https://kit.fontawesome.com/ff0f99a23c.js"
+      crossorigin="anonymous"
+    ></script>
+    <title>Post | Auction House</title>
+  </head>
+  <body class="bg-gray-100">
+    <header>
+      <nav class="flex justify-between items-center bg-black p-4 relative">
+        <div class="logo">
+          <a href="index.html" class="text-white text-xl no-underline"
+            >Auction House</a
+          >
+        </div>
+        <input type="checkbox" id="menu-toggle" class="hidden" />
+        <label
+          for="menu-toggle"
+          class="cursor-pointer text-white text-2xl md:hidden"
+        >
+          <i class="fas fa-bars"></i>
+        </label>
+        <ul
+          id="nav-menu"
+          class="list-none flex-col absolute top-full left-0 w-full bg-black p-4 hidden md:flex md:flex-row md:static md:w-auto md:p-0"
+        >
+          <li>
+            <a
+              href="index.html"
+              class="text-white text-base no-underline block p-2 transition-colors duration-300 ease-in-out hover:text-gray-500"
+              >Home</a
+            >
+          </li>
+          <li>
+            <a
+              href="/account/profile.html"
+              class="text-white text-base no-underline block p-2 transition-colors duration-300 ease-in-out hover:text-gray-500"
+              >Profile</a
+            >
+          </li>
+          <li id="user-info" class="text-white block p-2"></li>
+        </ul>
+      </nav>
+    </header>
+    <main class="p-4">
+      <section
+        id="editPostContainer"
+        class="max-w-[600px] my-5 mx-auto text-center flex flex-col items-center hidden"
+      >
+        <h2 class="text-xl font-semibold mb-4">Edit Your Listing</h2>
+        <div id="editMessage" class="mb-4 text-sm hidden"></div>
+        <form id="formEditPost" class="flex flex-col gap-3">
+          <input type="hidden" id="editPostId" name="id" />
+
+          <label for="editTitle" class="font-bold">Title:</label>
+          <input
+            type="text"
+            id="editTitle"
+            name="title"
+            required
+            class="w-full p-2 border rounded-md"
+          />
+
+          <label for="editDescription" class="font-bold">Description:</label>
+          <textarea
+            id="editDescription"
+            name="description"
+            class="w-full p-2 border rounded-md min-h-[120px]"
+          ></textarea>
+
+          <label for="editTags" class="font-bold">Tags:</label>
+          <input
+            type="text"
+            id="editTags"
+            name="tags"
+            class="w-full p-2 border rounded-md"
+          />
+
+          <label for="editMediaUrl" class="font-bold">Media URL:</label>
+          <input
+            type="url"
+            id="editMediaUrl"
+            name="mediaUrl"
+            class="w-full p-2 border rounded-md"
+          />
+
+          <label for="editMediaAlt" class="font-bold">Media Alt Text:</label>
+          <input
+            type="text"
+            id="editMediaAlt"
+            name="mediaAlt"
+            class="w-full p-2 border rounded-md"
+          />
+
+          <label for="editEndsAt" class="font-bold">Ends At:</label>
+          <input
+            type="datetime-local"
+            id="editEndsAt"
+            name="endsAt"
+            required
+            class="w-full p-2 border rounded-md"
+          />
+
+          <button
+            type="submit"
+            id="btnSubmitEdit"
+            class="bg-white text-black py-2 px-4 rounded-md border border-black hover:bg-black hover:text-white transition-colors duration-300"
+          >
+            Save Changes
+          </button>
+        </form>
+      </section>
+    </main>
+    <footer class="bg-black text-white text-center p-4 relative w-full">
+      <p>&copy; 2025 Auction House. All Rights Reserved.</p>
+    </footer>
+    <script type="module" src="../js/nav.js" defer></script>
+    <script type="module" src="./js/script.js" defer></script>
+  </body>
+</html>

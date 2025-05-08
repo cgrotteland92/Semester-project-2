@@ -1,4 +1,9 @@
-import { getUserProfile, getUserPosts, updateUserProfile } from "../api.js";
+import {
+  getUserProfile,
+  getUserPosts,
+  updateUserProfile,
+  createListing,
+} from "../api.js";
 import { getLoggedInUser } from "./auth.js";
 
 let currentProfileData = null;
@@ -19,6 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (username === me) {
     setupEditProfile(username);
+    setupCreateListing();
   }
 });
 
@@ -109,6 +115,93 @@ async function loadUserPosts(username) {
   }
 }
 
+/**
+ * Sets up the Create Listing form.
+ */
+function setupCreateListing() {
+  const section = document.getElementById("create-listing-section");
+  if (!section) {
+    console.warn("No create-listing-section found in HTML.");
+    return;
+  }
+
+  const toggleBtn = document.createElement("button");
+  toggleBtn.id = "btnToggleCreate";
+  toggleBtn.innerText = "Create Listing";
+  toggleBtn.className =
+    "bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 mb-4";
+  section.insertBefore(toggleBtn, section.firstChild);
+
+  const form = document.getElementById("create-listing-form");
+  const feedback = document.getElementById("create-feedback");
+  const cancelBtn = document.getElementById("cancel-create-listing");
+
+  toggleBtn.addEventListener("click", () => {
+    form.style.display = "block";
+    toggleBtn.style.display = "none";
+  });
+
+  cancelBtn?.addEventListener("click", () => {
+    form.style.display = "none";
+    toggleBtn.style.display = "block";
+    feedback.style.display = "none";
+    feedback.textContent = "";
+  });
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    feedback.textContent = "";
+    feedback.className = "";
+    feedback.style.display = "none";
+
+    const title = form["listing-title"].value.trim();
+    const description = form["listing-description"].value.trim();
+    const tags = form["listing-tags"].value
+      .split(",")
+      .map((t) => t.trim())
+      .filter(Boolean);
+    const endsAtInput = form["listing-endsAt"].value;
+    const endsAt = endsAtInput ? new Date(endsAtInput).toISOString() : null;
+
+    const media = [];
+    const urlFields = form.querySelectorAll(".media-url");
+    const altFields = form.querySelectorAll(".media-alt");
+    urlFields.forEach((input, i) => {
+      const url = input.value.trim();
+      const alt = altFields[i].value.trim();
+      if (url) media.push({ url, alt: alt || "" });
+    });
+
+    if (!title) {
+      feedback.textContent = "Title is required.";
+      feedback.classList.add("text-red-500");
+      feedback.style.display = "block";
+      return;
+    }
+    if (!endsAt) {
+      feedback.textContent = "End date/time is required.";
+      feedback.classList.add("text-red-500");
+      feedback.style.display = "block";
+      return;
+    }
+
+    const payload = { title, description, tags, media, endsAt };
+
+    try {
+      const newListing = await createListing(payload);
+      feedback.textContent = `✅ Created listing ID: ${newListing.data.id}`;
+      feedback.classList.add("text-green-600");
+      feedback.style.display = "block";
+      form.reset();
+    } catch (err) {
+      console.error("Error creating listing:", err);
+      feedback.textContent = `❌ ${err.message}`;
+      feedback.classList.add("text-red-500");
+      feedback.style.display = "block";
+    }
+  });
+}
+
 function setupEditProfile(username) {
   const section = document.getElementById("edit-profile");
   if (!section) {
@@ -160,7 +253,6 @@ function setupEditProfile(username) {
 
     try {
       await updateUserProfile(username, payload);
-
       form.style.display = "none";
       btnToggle.style.display = "block";
       await loadProfile(username);
