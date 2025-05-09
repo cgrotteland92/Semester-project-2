@@ -129,7 +129,6 @@ export async function loginUser(userData) {
  */
 export async function createListing(listingData) {
   try {
-    // Validate required fields
     if (!listingData.title) {
       throw new Error("Listing title is required");
     }
@@ -160,6 +159,51 @@ export async function createListing(listingData) {
   }
 }
 
+/**
+ * Update an existing listing
+ * @param {string} id
+ * @param {Object} listingData
+ * @returns {Promise<{data:Object}>}
+ */
+export async function updateListing(id, listingData) {
+  const res = await fetch(
+    `${BASE_API_URL}/auction/listings/${encodeURIComponent(id)}?_seller=true`,
+    {
+      method: "PATCH",
+      headers,
+      body: JSON.stringify(listingData),
+    }
+  );
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    const msg = err.errors?.[0]?.message || res.statusText;
+    throw new Error(`Failed to update (${res.status}): ${msg}`);
+  }
+  return res.json();
+}
+/**
+ * Deletes a listing by ID
+ * @param {string} id - The ID of the listing to delete
+ * @returns {Promise} The API response
+ */
+export async function deleteListing(id) {
+  const res = await fetch(
+    `${BASE_API_URL}/auction/listings/${encodeURIComponent(id)}`,
+    {
+      method: "DELETE",
+      headers,
+    }
+  );
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(
+      `Failed to delete listing (${res.status}): ${
+        err.errors?.[0]?.message || res.statusText
+      }`
+    );
+  }
+}
+
 export async function fetchPosts(params = {}) {
   const query = new URLSearchParams();
   Object.entries(params).forEach(([key, val]) => {
@@ -184,16 +228,20 @@ export async function fetchPosts(params = {}) {
   }
 }
 
-export async function fetchSinglePost(postId) {
-  try {
-    const response = await fetch(`${BASE_API_URL}/auction/listings/${postId}`, {
-      method: "GET",
-      headers,
-    });
-    if (!response.ok)
-      throw new Error("Failed to get listing: " + response.status);
-    return await response.json();
-  } catch (error) {
-    console.error("Error fetching post:", error.message);
+/**
+ * Fetch a single listing by ID
+ * @param {string} id - Listing ID
+ * @returns {Promise<{ data: Object }>} - The listing data
+ */
+export async function getSingleListing(id) {
+  const url = `${BASE_API_URL}/auction/listings/${encodeURIComponent(
+    id
+  )}?_seller=true`;
+  const response = await fetch(url, { headers });
+  if (!response.ok) {
+    const errorJson = await response.json().catch(() => ({}));
+    const msg = errorJson.errors?.[0]?.message || response.statusText;
+    throw new Error(`Failed to load listing (${response.status}): ${msg}`);
   }
+  return response.json();
 }

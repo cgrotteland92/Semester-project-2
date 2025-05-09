@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="css/output.css" />
+    <link rel="stylesheet" href="../css/output.css" />
     <script
       src="https://kit.fontawesome.com/ff0f99a23c.js"
       crossorigin="anonymous"
@@ -32,14 +32,15 @@
           <li>
             <a
               href="index.html"
-              class="text-white text-base no-underline block p-2 transition-colors duration-300 ease-in-out hover:text-gray-500"
+              class="text-white text-base no-underline block p-2 hover:text-gray-500"
               >Home</a
             >
           </li>
           <li>
             <a
+              id="nav-profile-link"
               href="/account/profile.html"
-              class="text-white text-base no-underline block p-2 transition-colors duration-300 ease-in-out hover:text-gray-500"
+              class="text-white text-base no-underline block p-2 hover:text-gray-500"
               >Profile</a
             >
           </li>
@@ -47,79 +48,156 @@
         </ul>
       </nav>
     </header>
-    <main class="p-4">
+
+    <main class="max-w-4xl mx-auto my-12 p-6 bg-gray-100">
+      <section id="skeleton-loader"></section>
       <section
-        id="editPostContainer"
-        class="max-w-[600px] my-5 mx-auto text-center flex flex-col items-center hidden"
+        id="single-listing-container"
+        class="hidden bg-white rounded-2xl shadow-lg overflow-hidden"
       >
-        <h2 class="text-xl font-semibold mb-4">Edit Your Listing</h2>
-        <div id="editMessage" class="mb-4 text-sm hidden"></div>
-        <form id="formEditPost" class="flex flex-col gap-3">
-          <input type="hidden" id="editPostId" name="id" />
-
-          <label for="editTitle" class="font-bold">Title:</label>
-          <input
-            type="text"
-            id="editTitle"
-            name="title"
-            required
-            class="w-full p-2 border rounded-md"
+        <div class="w-full h-80 md:h-96 bg-gray-200">
+          <img
+            id="listing-media"
+            src=""
+            alt=""
+            class="w-full h-full object-cover"
           />
+        </div>
 
-          <label for="editDescription" class="font-bold">Description:</label>
-          <textarea
-            id="editDescription"
-            name="description"
-            class="w-full p-2 border rounded-md min-h-[120px]"
-          ></textarea>
+        <div class="p-6 space-y-6">
+          <h1
+            id="listing-title"
+            class="text-3xl font-extrabold text-gray-900"
+          ></h1>
 
-          <label for="editTags" class="font-bold">Tags:</label>
-          <input
-            type="text"
-            id="editTags"
-            name="tags"
-            class="w-full p-2 border rounded-md"
-          />
+          <p id="listing-description" class="text-gray-700 leading-relaxed"></p>
 
-          <label for="editMediaUrl" class="font-bold">Media URL:</label>
-          <input
-            type="url"
-            id="editMediaUrl"
-            name="mediaUrl"
-            class="w-full p-2 border rounded-md"
-          />
+          <div id="listing-tags" class="flex flex-wrap gap-2"></div>
 
-          <label for="editMediaAlt" class="font-bold">Media Alt Text:</label>
-          <input
-            type="text"
-            id="editMediaAlt"
-            name="mediaAlt"
-            class="w-full p-2 border rounded-md"
-          />
-
-          <label for="editEndsAt" class="font-bold">Ends At:</label>
-          <input
-            type="datetime-local"
-            id="editEndsAt"
-            name="endsAt"
-            required
-            class="w-full p-2 border rounded-md"
-          />
-
-          <button
-            type="submit"
-            id="btnSubmitEdit"
-            class="bg-white text-black py-2 px-4 rounded-md border border-black hover:bg-black hover:text-white transition-colors duration-300"
+          <div
+            class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-gray-500 text-sm"
           >
-            Save Changes
+            <p>
+              <strong>Created:</strong>
+              <time id="listing-created"></time>
+            </p>
+            <p>
+              <strong>Ends At:</strong>
+              <time id="listing-endsAt"></time>
+            </p>
+            <p>
+              <strong>Updated:</strong>
+              <time id="listing-updated"></time>
+            </p>
+            <p>
+              <strong>Bids:</strong>
+              <span id="listing-bids"></span>
+            </p>
+          </div>
+
+          <div class="text-right">
+            <button
+              id="placeBidBtn"
+              class="px-6 py-2 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 transition"
+            >
+              Place a Bid
+            </button>
+          </div>
+        </div>
+
+        <div id="listing-actions" class="hidden justify-end gap-2 px-6 pt-4">
+          <button
+            id="btnToggleEditListing"
+            class="px-4 py-2 bg-yellow-500 text-white rounded-md hover:bg-yellow-600"
+          >
+            Edit Listing
           </button>
-        </form>
+          <button
+            id="btnDeleteListing"
+            class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
+          >
+            Delete Listing
+          </button>
+        </div>
+        <section
+          id="editPostContainer"
+          class="hidden flex-col items-center max-w-[600px] my-5 mx-auto text-center"
+        >
+          <h2 class="text-xl font-semibold mb-4">Edit Your Listing</h2>
+          <div id="editMessage" class="mb-4 text-sm hidden"></div>
+          <form id="formEditPost" class="flex flex-col gap-3 w-full px-4">
+            <input type="hidden" id="editPostId" name="id" />
+
+            <label for="editTitle" class="font-bold">Title:</label>
+            <input
+              type="text"
+              id="editTitle"
+              name="title"
+              required
+              class="w-full p-2 border rounded-md"
+            />
+
+            <label for="editDescription" class="font-bold">
+              Description:
+            </label>
+            <textarea
+              id="editDescription"
+              name="description"
+              class="w-full p-2 border rounded-md min-h-[120px]"
+            ></textarea>
+
+            <label for="editTags" class="font-bold">Tags:</label>
+            <input
+              type="text"
+              id="editTags"
+              name="tags"
+              class="w-full p-2 border rounded-md"
+            />
+
+            <label for="editMediaUrl" class="font-bold">Media URL:</label>
+            <input
+              type="url"
+              id="editMediaUrl"
+              name="mediaUrl"
+              class="w-full p-2 border rounded-md"
+            />
+
+            <label for="editMediaAlt" class="font-bold">
+              Media Alt Text:
+            </label>
+            <input
+              type="text"
+              id="editMediaAlt"
+              name="mediaAlt"
+              class="w-full p-2 border rounded-md"
+            />
+
+            <label for="editEndsAt" class="font-bold">Ends At:</label>
+            <input
+              type="datetime-local"
+              id="editEndsAt"
+              name="endsAt"
+              required
+              class="w-full p-2 border rounded-md"
+            />
+
+            <button
+              type="submit"
+              id="btnSubmitEdit"
+              class="mt-4 bg-white text-black py-2 px-4 rounded-md border border-black hover:bg-black hover:text-white transition-colors duration-300"
+            >
+              Save Changes
+            </button>
+          </form>
+        </section>
       </section>
     </main>
-    <footer class="bg-black text-white text-center p-4 relative w-full">
+
+    <footer class="bg-black text-white text-center p-4 w-full">
       <p>&copy; 2025 Auction House. All Rights Reserved.</p>
     </footer>
+
     <script type="module" src="../js/nav.js" defer></script>
-    <script type="module" src="./js/script.js" defer></script>
+    <script type="module" src="../js/singleListing.js" defer></script>
   </body>
 </html>
