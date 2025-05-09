@@ -5,6 +5,7 @@ import {
   createListing,
 } from "../api.js";
 import { getLoggedInUser } from "./auth.js";
+import { showSkeletonLoader } from "../utils/skeletonLoader.js";
 
 let currentProfileData = null;
 
@@ -106,7 +107,11 @@ async function loadUserPosts(username) {
       endsAt.className = "text-gray-500 text-xs mt-2";
       card.appendChild(endsAt);
 
-      grid.appendChild(card);
+      const link = document.createElement("a");
+      link.href = `/post/listing.html?id=${encodeURIComponent(post.id)}`;
+      link.appendChild(card);
+
+      grid.appendChild(link);
     });
   } catch (err) {
     console.error("Could not load user posts:", err);
