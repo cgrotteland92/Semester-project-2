@@ -6,6 +6,8 @@ import {
 } from "../api.js";
 import { getLoggedInUser } from "./auth.js";
 import { showSkeletonLoader } from "../utils/skeletonLoader.js";
+import { formatTimeRemaining } from "../utils/timeRemaining.js";
+import { showMessage } from "../utils/message.js";
 
 let currentProfileData = null;
 
@@ -60,8 +62,10 @@ async function loadProfile(username) {
     if (eAvatar) eAvatar.value = data.avatar.url;
   } catch (err) {
     console.error("Could not load profile:", err);
-    const nameEl = document.getElementById("profile-name");
-    if (nameEl) nameEl.textContent = "Error loading profile";
+    const container = document.getElementById("profile-section");
+    if (container) {
+      showMessage(container, "Error loading profile.", true);
+    }
   }
 }
 
@@ -69,13 +73,15 @@ async function loadProfile(username) {
  * Fetches user posts and renders them in the posts grid
  */
 async function loadUserPosts(username) {
+  const grid = document.getElementById("posts-grid");
+  showSkeletonLoader(grid, 3);
   try {
     const { data: posts } = await getUserPosts(username);
     const grid = document.getElementById("posts-grid");
     grid.innerHTML = "";
 
     if (posts.length === 0) {
-      grid.textContent = "No posts yet.";
+      showMessage(grid, "No posts yet.");
       return;
     }
 
@@ -103,7 +109,9 @@ async function loadUserPosts(username) {
       card.appendChild(desc);
 
       const endsAt = document.createElement("p");
-      endsAt.textContent = "Ends: " + new Date(post.endsAt).toLocaleString();
+      const endDate = new Date(post.endsAt);
+      endsAt.textContent = `Ends in: ${formatTimeRemaining(endDate)}`;
+      endsAt.title = `Ends at ${endDate.toLocaleString()}`;
       endsAt.className = "text-gray-500 text-xs mt-2";
       card.appendChild(endsAt);
 
@@ -115,8 +123,8 @@ async function loadUserPosts(username) {
     });
   } catch (err) {
     console.error("Could not load user posts:", err);
-    const grid = document.getElementById("posts-grid");
-    if (grid) grid.textContent = "Error loading posts.";
+    grid.innerHTML = "";
+    showMessage(grid, "Error loading posts.", true);
   }
 }
 
@@ -178,30 +186,30 @@ function setupCreateListing() {
     });
 
     if (!title) {
-      feedback.textContent = "Title is required.";
-      feedback.classList.add("text-red-500");
+      showMessage(feedback, "Title is required.", true);
       feedback.style.display = "block";
       return;
     }
     if (!endsAt) {
-      feedback.textContent = "End date/time is required.";
-      feedback.classList.add("text-red-500");
+      showMessage(feedback, "End date/time is required.", true);
       feedback.style.display = "block";
       return;
     }
 
-    const payload = { title, description, tags, media, endsAt };
-
     try {
-      const newListing = await createListing(payload);
-      feedback.textContent = `✅ Created listing ID: ${newListing.data.id}`;
-      feedback.classList.add("text-green-600");
+      const newListing = await createListing({
+        title,
+        description,
+        tags,
+        media,
+        endsAt,
+      });
+      showMessage(feedback, `✅ Created listing ID: ${newListing.data.id}`);
       feedback.style.display = "block";
       form.reset();
     } catch (err) {
       console.error("Error creating listing:", err);
-      feedback.textContent = `❌ ${err.message}`;
-      feedback.classList.add("text-red-500");
+      showMessage(feedback, `❌ ${err.message}`, true);
       feedback.style.display = "block";
     }
   });
@@ -253,7 +261,12 @@ function setupEditProfile(username) {
       };
 
     if (Object.keys(payload).length === 0) {
-      return alert("Please change at least one field before saving.");
+      showMessage(
+        section,
+        "Please change at least one field before saving.",
+        true
+      );
+      return;
     }
 
     try {
@@ -263,8 +276,10 @@ function setupEditProfile(username) {
       await loadProfile(username);
     } catch (err) {
       console.error("Error updating profile:", err);
-      alert(
-        "Failed to update profile. Make sure your image URLs are public and valid."
+      showMessage(
+        section,
+        "Failed to update profile. Make sure your image URLs are public and valid.",
+        true
       );
     }
   });

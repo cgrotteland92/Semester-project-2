@@ -28,6 +28,16 @@ document.addEventListener("DOMContentLoaded", async () => {
     console.log("Listing data:", data);
     skeleton.classList.add("hidden");
     container.classList.remove("hidden");
+
+    const sellerEl = document.getElementById("listing-seller");
+    if (sellerEl) {
+      const sellerName =
+        typeof data.seller === "string"
+          ? data.seller
+          : data.seller.name || data.seller.email;
+      sellerEl.textContent = sellerName;
+    }
+
     if (data.media?.length) {
       const mediaEl = document.getElementById("listing-media");
       mediaEl.src = data.media[0].url;
