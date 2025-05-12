@@ -43,7 +43,6 @@ async function displayPosts(fetchFunction) {
     setupFilter();
   } catch (error) {
     console.error("Error displaying posts:", error);
-    // Display error banners in both sections
     [newListingContainer, allPostsContainer].forEach((c) => {
       if (c)
         showMessage(c, "Error loading posts. Please try again later.", true);
@@ -62,7 +61,6 @@ function renderPosts(data) {
     endsAt: new Date(p.endsAt),
   }));
 
-  // Sort descending by creation date
   const sortedPosts = posts.sort((a, b) => b.created - a.created);
   allListings = sortedPosts;
   console.log("Sorted posts:", sortedPosts);
