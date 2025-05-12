@@ -108,6 +108,17 @@ async function loadUserPosts(username) {
       desc.className = "text-gray-700 text-sm flex-grow";
       card.appendChild(desc);
 
+      const tagsDiv = document.createElement("div");
+      tagsDiv.className = "flex flex-wrap mt-2";
+      (post.tags || []).forEach((tag) => {
+        const span = document.createElement("span");
+        span.textContent = tag;
+        span.className =
+          "px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs mr-2 mb-2";
+        tagsDiv.appendChild(span);
+      });
+      card.appendChild(tagsDiv);
+
       const endsAt = document.createElement("p");
       const endDate = new Date(post.endsAt);
       endsAt.textContent = `Ends in: ${formatTimeRemaining(endDate)}`;
