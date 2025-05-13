@@ -119,13 +119,13 @@ export async function loginUser(userData) {
 
 /**
  * Create a new auction listing.
- * @param {Object} listingData - The listing data to create
- * @param {string} listingData.title - Title of the listing (required)
- * @param {string} [listingData.description] - Description of the listing
- * @param {Array<string>} [listingData.tags] - Array of tags for the listing
- * @param {Array<string>} [listingData.media] - Array of media URLs for the listing
- * @param {string} listingData.endsAt - ISO date string for when the auction ends (required)
- * @returns {Promise<Object>} - The created listing data
+ * @param {Object} listingData
+ * @param {string} listingData.title
+ * @param {string} [listingData.description]
+ * @param {Array<string>} [listingData.tags]
+ * @param {Array<string>} [listingData.media]
+ * @param {string} listingData.endsAt
+ * @returns {Promise<Object>}
  */
 export async function createListing(listingData) {
   try {
@@ -167,9 +167,9 @@ export async function createListing(listingData) {
  */
 export async function updateListing(id, listingData) {
   const res = await fetch(
-    `${BASE_API_URL}/auction/listings/${encodeURIComponent(id)}?_seller=true`,
+    `${BASE_API_URL}/auction/listings/${encodeURIComponent(id)}`,
     {
-      method: "PATCH",
+      method: "PUT",
       headers,
       body: JSON.stringify(listingData),
     }
@@ -233,15 +233,22 @@ export async function fetchPosts(params = {}) {
  * @param {string} id - Listing ID
  * @returns {Promise<{ data: Object }>} - The listing data
  */
-export async function getSingleListing(id) {
+export async function getSingleListing(id, options = {}) {
+  const params = new URLSearchParams();
+  params.append("_seller", "true");
+  if (options._bids) params.append("_bids", "true");
+  const query = params.toString() ? `?${params}` : "";
   const url = `${BASE_API_URL}/auction/listings/${encodeURIComponent(
     id
-  )}?_seller=true`;
+  )}${query}`;
   const response = await fetch(url, { headers });
   if (!response.ok) {
-    const errorJson = await response.json().catch(() => ({}));
-    const msg = errorJson.errors?.[0]?.message || response.statusText;
-    throw new Error(`Failed to load listing (${response.status}): ${msg}`);
+    const err = await response.json().catch(() => ({}));
+    throw new Error(
+      `Failed to load listing (${response.status}): ${
+        err.errors?.[0]?.message || response.statusText
+      }`
+    );
   }
   return response.json();
 }

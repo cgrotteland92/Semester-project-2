@@ -13,11 +13,9 @@
   <body class="bg-gray-100">
     <header>
       <nav class="flex justify-between items-center bg-black p-4 relative">
-        <div class="logo">
-          <a href="index.html" class="text-white text-xl no-underline"
-            >Auction House</a
-          >
-        </div>
+        <a href="index.html" class="text-white text-xl font-bold"
+          >Auction House</a
+        >
         <input type="checkbox" id="menu-toggle" class="hidden" />
         <label
           for="menu-toggle"
@@ -32,7 +30,7 @@
           <li>
             <a
               href="index.html"
-              class="text-white text-base no-underline block p-2 hover:text-gray-500"
+              class="text-white px-2 py-1 hover:text-gray-400"
               >Home</a
             >
           </li>
@@ -40,164 +38,224 @@
             <a
               id="nav-profile-link"
               href="/account/profile.html"
-              class="text-white text-base no-underline block p-2 hover:text-gray-500"
+              class="text-white px-2 py-1 hover:text-gray-400"
               >Profile</a
             >
           </li>
-          <li id="user-info" class="text-white block p-2"></li>
+          <li id="user-info" class="text-white px-2 py-1"></li>
         </ul>
       </nav>
     </header>
-
-    <main class="max-w-4xl mx-auto my-12 p-6 bg-gray-100">
+    <main class="max-w-4xl mx-auto my-12">
       <section id="skeleton-loader"></section>
-      <section
-        id="single-listing-container"
-        class="hidden bg-white rounded-2xl shadow-lg overflow-hidden"
-      >
-        <div class="w-full h-80 md:h-96 bg-gray-200">
-          <img
-            id="listing-media"
-            src=""
-            alt=""
-            class="w-full h-full object-cover"
-          />
-        </div>
 
-        <div class="p-6 space-y-6">
-          <h1
-            id="listing-title"
-            class="text-3xl font-extrabold text-gray-900"
-          ></h1>
+      <div
+        id="single-listing-container"
+        class="hidden bg-white rounded-3xl shadow-xl overflow-hidden"
+      >
+        <img
+          id="listing-media"
+          src=""
+          alt="Listing Image"
+          class="w-full h-96 object-cover"
+        />
+
+        <div class="p-8 space-y-6">
+          <div
+            class="flex flex-col md:flex-row justify-between items-start md:items-center"
+          >
+            <div class="flex items-center space-x-3">
+              <h1
+                id="listing-title"
+                class="text-3xl font-bold text-gray-900"
+              ></h1>
+            </div>
+          </div>
 
           <p id="listing-description" class="text-gray-700 leading-relaxed"></p>
 
           <div id="listing-tags" class="flex flex-wrap gap-2"></div>
 
           <div
-            class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-gray-500 text-sm"
+            class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-gray-600 text-sm"
           >
-            <p>
-              <strong>Seller:</strong>
-              <span id="listing-seller"></span>
-            </p>
-            <p>
-              <strong>Created:</strong>
-              <time id="listing-created"></time>
-            </p>
-            <p>
-              <strong>Ends At:</strong>
-              <time id="listing-endsAt"></time>
-            </p>
-            <p>
-              <strong>Updated:</strong>
-              <time id="listing-updated"></time>
-            </p>
-            <p>
-              <strong>Bids:</strong>
-              <span id="listing-bids"></span>
-            </p>
+            <div class="flex items-center space-x-2">
+              <i class="fas fa-user-circle"></i
+              ><span
+                ><strong>Seller:</strong> <span id="listing-seller"></span
+              ></span>
+            </div>
+            <div class="flex items-center space-x-2">
+              <i class="fas fa-calendar-plus"></i
+              ><span
+                ><strong>Created:</strong> <time id="listing-created"></time
+              ></span>
+            </div>
+            <div class="flex items-center space-x-2">
+              <i class="fas fa-hourglass-end"></i
+              ><span
+                ><strong>Ends At:</strong> <time id="listing-endsAt"></time
+              ></span>
+            </div>
+            <div class="flex items-center space-x-2">
+              <i class="fas fa-sync-alt"></i
+              ><span
+                ><strong>Updated:</strong> <time id="listing-updated"></time
+              ></span>
+            </div>
           </div>
 
-          <div class="text-right">
+          <div class="flex space-x-4">
             <button
               id="placeBidBtn"
-              class="px-6 py-2 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 transition"
+              class="flex items-center px-6 py-3 bg-indigo-600 text-white rounded-full hover:bg-indigo-700 transition-shadow shadow-md"
             >
-              Place a Bid
+              <i class="fas fa-gavel mr-2"></i>Place a Bid
             </button>
+            <div id="listing-actions" class="hidden flex space-x-2">
+              <button
+                id="btnToggleEditListing"
+                class="flex items-center px-4 py-2 bg-yellow-500 text-white rounded-full hover:bg-yellow-600 transition-shadow"
+              >
+                <i class="fas fa-edit mr-1"></i>Edit
+              </button>
+            </div>
+          </div>
+
+          <div class="mt-8">
+            <h2
+              class="text-2xl font-semibold mb-4 flex items-center space-x-2 text-gray-800"
+            >
+              <i class="fas fa-history"></i
+              ><span>Bids (<span id="listing-bids"></span>)</span>
+            </h2>
+            <div
+              id="bid-history"
+              class="divide-y max-h-64 overflow-y-auto space-y-4 px-4 pt-2"
+            ></div>
           </div>
         </div>
 
-        <div id="listing-actions" class="hidden justify-end gap-2 px-6 pt-4">
-          <button
-            id="btnToggleEditListing"
-            class="px-4 py-2 bg-yellow-500 text-white rounded-md hover:bg-yellow-600"
-          >
-            Edit Listing
-          </button>
-          <button
-            id="btnDeleteListing"
-            class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
-          >
-            Delete Listing
-          </button>
-        </div>
         <section
           id="editPostContainer"
-          class="hidden flex-col items-center max-w-[600px] my-5 mx-auto text-center"
+          class="hidden bg-gray-50 p-8 flex flex-col items-center"
         >
-          <h2 class="text-xl font-semibold mb-4">Edit Your Listing</h2>
-          <div id="editMessage" class="mb-4 text-sm hidden"></div>
-          <form id="formEditPost" class="flex flex-col gap-3 w-full px-4">
+          <h2 class="text-2xl text-center font-semibold mb-6">
+            Edit Your Listing
+          </h2>
+          <div id="editMessage" class="mb-4 text-sm text-red-500"></div>
+          <form id="formEditPost" class="space-y-6">
             <input type="hidden" id="editPostId" name="id" />
 
-            <label for="editTitle" class="font-bold">Title:</label>
-            <input
-              type="text"
-              id="editTitle"
-              name="title"
-              required
-              class="w-full p-2 border rounded-md"
-            />
+            <div class="space-y-2">
+              <label
+                for="editTitle"
+                class="block text-sm font-medium text-gray-700"
+                >Title</label
+              >
+              <input
+                type="text"
+                id="editTitle"
+                name="title"
+                required
+                class="mt-1 block w-full p-2 border rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+              />
+            </div>
 
-            <label for="editDescription" class="font-bold">
-              Description:
-            </label>
-            <textarea
-              id="editDescription"
-              name="description"
-              class="w-full p-2 border rounded-md min-h-[120px]"
-            ></textarea>
+            <div class="space-y-2">
+              <label
+                for="editDescription"
+                class="block text-sm font-medium text-gray-700"
+                >Description</label
+              >
+              <textarea
+                id="editDescription"
+                name="description"
+                rows="4"
+                class="mt-1 block w-full p-2 border rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+              ></textarea>
+            </div>
 
-            <label for="editTags" class="font-bold">Tags:</label>
-            <input
-              type="text"
-              id="editTags"
-              name="tags"
-              class="w-full p-2 border rounded-md"
-            />
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div class="space-y-2">
+                <label
+                  for="editTags"
+                  class="block text-sm font-medium text-gray-700"
+                  >Tags</label
+                >
+                <input
+                  type="text"
+                  id="editTags"
+                  name="tags"
+                  class="mt-1 block w-full p-2 border rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                />
+              </div>
 
-            <label for="editMediaUrl" class="font-bold">Media URL:</label>
-            <input
-              type="url"
-              id="editMediaUrl"
-              name="mediaUrl"
-              class="w-full p-2 border rounded-md"
-            />
+              <div class="space-y-2">
+                <label
+                  for="editEndsAt"
+                  class="block text-sm font-medium text-gray-700"
+                  >Ends At</label
+                >
+                <input
+                  type="datetime-local"
+                  id="editEndsAt"
+                  name="endsAt"
+                  required
+                  class="mt-1 block w-full p-2 border rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                />
+              </div>
+            </div>
 
-            <label for="editMediaAlt" class="font-bold">
-              Media Alt Text:
-            </label>
-            <input
-              type="text"
-              id="editMediaAlt"
-              name="mediaAlt"
-              class="w-full p-2 border rounded-md"
-            />
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div class="space-y-2">
+                <label
+                  for="editMediaUrl"
+                  class="block text-sm font-medium text-gray-700"
+                  >Media URL</label
+                >
+                <input
+                  type="url"
+                  id="editMediaUrl"
+                  name="mediaUrl"
+                  class="mt-1 block w-full p-2 border rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                />
+              </div>
 
-            <label for="editEndsAt" class="font-bold">Ends At:</label>
-            <input
-              type="datetime-local"
-              id="editEndsAt"
-              name="endsAt"
-              required
-              class="w-full p-2 border rounded-md"
-            />
+              <div class="space-y-2">
+                <label
+                  for="editMediaAlt"
+                  class="block text-sm font-medium text-gray-700"
+                  >Media Alt Text</label
+                >
+                <input
+                  type="text"
+                  id="editMediaAlt"
+                  name="mediaAlt"
+                  class="mt-1 block w-full p-2 border rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                />
+              </div>
+            </div>
 
             <button
               type="submit"
               id="btnSubmitEdit"
-              class="mt-4 bg-white text-black py-2 px-4 rounded-md border border-black hover:bg-black hover:text-white transition-colors duration-300"
+              class="w-full flex justify-center px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-shadow shadow-md"
             >
-              Save Changes
+              <p>Save Changes</p>
+            </button>
+            <button
+              id="btnDeleteListing"
+              class="w-full flex justify-center px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-shadow shadow-md"
+            >
+              <p>Delete</p>
             </button>
           </form>
         </section>
-      </section>
+      </div>
     </main>
 
-    <footer class="bg-black text-white text-center p-4 w-full">
+    <footer class="bg-black text-white text-center p-4">
       <p>&copy; 2025 Auction House. All Rights Reserved.</p>
     </footer>
 

@@ -3,6 +3,38 @@ import { getLoggedInUser } from "./auth/auth.js";
 import { showMessage } from "./utils/message.js";
 import { showSkeletonLoader } from "./utils/skeletonLoader.js";
 
+function renderBidHistory(bids) {
+  const historyContainer = document.getElementById("bid-history");
+  if (!historyContainer) {
+    console.error("renderBidHistory: #bid-history element not found");
+    return;
+  }
+
+  console.log("renderBidHistory called with bids:", bids);
+  historyContainer.innerHTML = "";
+
+  if (!Array.isArray(bids) || bids.length === 0) {
+    showMessage(historyContainer, "No bids yet.");
+    return;
+  }
+
+  bids.forEach((bid) => {
+    const item = document.createElement("div");
+    item.className = "flex justify-between py-2 border-b";
+
+    const bidderSpan = document.createElement("span");
+    bidderSpan.textContent = bid.bidder?.name || bid.bidderEmail || "Unknown";
+    bidderSpan.className = "font-medium";
+
+    const amountSpan = document.createElement("span");
+    amountSpan.textContent = `$${Number(bid.amount).toFixed(2)}`;
+    amountSpan.className = "text-indigo-600 font-semibold";
+
+    item.append(bidderSpan, amountSpan);
+    historyContainer.appendChild(item);
+  });
+}
+
 document.addEventListener("DOMContentLoaded", async () => {
   const params = new URLSearchParams(window.location.search);
   const id = params.get("id");
@@ -24,8 +56,9 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   try {
-    const { data } = await getSingleListing(id);
+    const { data } = await getSingleListing(id, { _seller: true, _bids: true });
     console.log("Listing data:", data);
+    console.log("Bid array:", data.bids);
     skeleton.classList.add("hidden");
     container.classList.remove("hidden");
 
@@ -65,6 +98,8 @@ document.addEventListener("DOMContentLoaded", async () => {
       data.updated
     ).toLocaleString();
     document.getElementById("listing-bids").textContent = data._count.bids;
+
+    renderBidHistory(data.bids);
 
     container.classList.remove("hidden");
 
