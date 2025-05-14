@@ -252,3 +252,51 @@ export async function getSingleListing(id, options = {}) {
   }
   return response.json();
 }
+
+/**
+ * Place a bid on a listing
+ * @param {string} listingId
+ * @param {number} amount
+ * @returns {Promise<{ data: Object }>}
+ */
+export async function placeBid(listingId, amount) {
+  const url = `${BASE_API_URL}/auction/listings/${encodeURIComponent(
+    listingId
+  )}/bids`;
+  const resp = await fetch(url, {
+    method: "POST",
+    headers,
+    body: JSON.stringify({ amount }),
+  });
+  if (!resp.ok) {
+    let msg = resp.statusText;
+    try {
+      const err = await resp.json();
+      msg = err.message || msg;
+    } catch {}
+    throw new Error(`Bid failed: ${msg}`);
+  }
+  const { data } = await resp.json();
+  return data;
+}
+
+/**
+ * Get all bids made by a user
+ * @param {string} profileName
+ * @returns {Promise<{ data: Object }>}
+ */
+export async function getUserBids(profileName) {
+  const url = new URL(
+    `${BASE_API_URL}/auction/profiles/${encodeURIComponent(profileName)}/bids`
+  );
+  url.searchParams.append("_listings", "true");
+
+  const res = await fetch(url.toString(), { headers });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(
+      err.errors?.[0]?.message || `Failed to fetch bids (${res.status})`
+    );
+  }
+  return res.json();
+}

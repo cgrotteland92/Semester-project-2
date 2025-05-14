@@ -1,12 +1,13 @@
 import {
   getUserProfile,
   getUserPosts,
+  getUserBids,
   updateUserProfile,
   createListing,
 } from "../api.js";
 import { getLoggedInUser } from "./auth.js";
 import { showSkeletonLoader } from "../utils/skeletonLoader.js";
-import { formatTimeRemaining } from "../utils/timeRemaining.js";
+import { formatTimeRemaining, renderEndsAt } from "../utils/timeRemaining.js";
 import { showMessage } from "../utils/message.js";
 
 let currentProfileData = null;
@@ -24,6 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   loadProfile(username);
   loadUserPosts(username);
+  loadUserBids(username);
 
   if (username === me) {
     setupEditProfile(username);
@@ -31,6 +33,65 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
+/**
+ * Fetches all bids by this user and renders them in the same card style as posts
+ */
+async function loadUserBids(username) {
+  const grid = document.getElementById("bids-grid");
+  if (!grid) return console.warn("#bids-grid not found");
+  showSkeletonLoader(grid, 3);
+
+  try {
+    const { data: bids } = await getUserBids(username);
+    grid.innerHTML = "";
+
+    if (bids.length === 0) {
+      showMessage(grid, "No bids placed yet.");
+      return;
+    }
+
+    bids.forEach((bid) => {
+      const card = document.createElement("div");
+      card.className = "bg-white rounded-lg shadow p-4 flex flex-col h-full";
+
+      const mediaItem = bid.listing.media?.[0];
+      if (mediaItem) {
+        const img = document.createElement("img");
+        img.src = mediaItem.url;
+        img.alt = mediaItem.alt || bid.listing.title;
+        img.className = "w-full h-48 object-cover rounded-md mb-3";
+        card.appendChild(img);
+      }
+
+      const titleEl = document.createElement("h3");
+      titleEl.textContent = bid.listing.title;
+      titleEl.className = "font-semibold text-lg mb-2 break-words";
+      card.appendChild(titleEl);
+
+      const amountEl = document.createElement("p");
+      amountEl.textContent = `Placed bid of: ${Number(bid.amount)} Coins`;
+      amountEl.className = "text-indigo-600 font-semibold mb-1";
+      card.appendChild(amountEl);
+
+      const endsEl = document.createElement("p");
+      const endsAtDate = new Date(bid.listing.endsAt);
+      endsEl.textContent = renderEndsAt(endsAtDate);
+      endsEl.title = `Ends at ${endsAtDate.toLocaleString()}`;
+      endsEl.className = "text-gray-700 text-sm mb-1";
+      card.appendChild(endsEl);
+
+      const link = document.createElement("a");
+      link.href = `/post/listing.html?id=${encodeURIComponent(bid.listing.id)}`;
+      link.appendChild(card);
+
+      grid.appendChild(link);
+    });
+  } catch (err) {
+    console.error("Could not load user bids:", err);
+    grid.innerHTML = "";
+    showMessage(grid, "Error loading bids.", true);
+  }
+}
 /**
  * Fetches profile info and injects into the DOM & pre-fills the edit form
  */
@@ -87,14 +148,14 @@ async function loadUserPosts(username) {
 
     posts.forEach((post) => {
       const card = document.createElement("div");
-      card.className = "bg-white rounded-lg shadow p-4 flex flex-col";
+      card.className = "bg-white rounded-lg shadow p-4 flex flex-col h-full";
 
       const mediaItem = post.media?.[0];
       if (mediaItem) {
         const img = document.createElement("img");
         img.src = mediaItem.url;
         img.alt = mediaItem.alt || post.title;
-        img.className = "w-full h-40 object-cover rounded-md mb-3";
+        img.className = "w-full h-56 object-cover rounded-md mb-3";
         card.appendChild(img);
       }
 
@@ -106,6 +167,31 @@ async function loadUserPosts(username) {
       const desc = document.createElement("p");
       desc.textContent = post.description || "";
       desc.className = "text-gray-700 text-sm flex-grow";
+      card.appendChild(desc);
+
+      const fullText = post.description || "";
+      const maxLen = 100;
+      if (fullText.length > maxLen) {
+        const shortText = fullText.slice(0, maxLen) + "... ";
+        desc.textContent = shortText;
+
+        const moreText = document.createElement("span");
+        moreText.textContent = "Read more";
+        moreText.className = "text-blue-500 underline text-sm cursor-pointer";
+        moreText.addEventListener("click", () => {
+          if (moreText.textContent === "Read more") {
+            desc.textContent = fullText + " ";
+            moreText.textContent = "Show less";
+          } else {
+            desc.textContent = shortText;
+            moreText.textContent = "Read more";
+          }
+          desc.appendChild(moreText);
+        });
+        desc.appendChild(moreText);
+      } else {
+        desc.textContent = fullText;
+      }
       card.appendChild(desc);
 
       const tagsDiv = document.createElement("div");

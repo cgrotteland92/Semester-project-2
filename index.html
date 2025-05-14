@@ -51,8 +51,39 @@
         </ul>
       </nav>
     </header>
+    <section
+      id="welcome-section"
+      class="relative w-full h-64 md:h-96 lg:h-[500px] flex items-center justify-center mb-8 overflow-hidden"
+    >
+      <img
+        id="welcome-image"
+        src="https://images.unsplash.com/photo-1597696929736-6d13bed8e6a8?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+        alt="Welcome to Auction House"
+        class="absolute inset-0 w-full h-full object-cover"
+      />
+      <div class="absolute inset-0 bg-black/50"></div>
+      <div class="relative z-10 text-center text-white px-4">
+        <h1 class="text-4xl md:text-5xl font-bold mb-4 drop-shadow-lg">
+          Welcome to Auction House
+        </h1>
+        <p class="text-lg md:text-xl mb-6 drop-shadow-lg">
+          Find the perfect item for you!
+        </p>
+        <div class="space-x-4">
+          <a
+            href="/account/register.html"
+            class="px-6 py-3 bg-green-500 hover:bg-green-600 text-white rounded-lg transition"
+            >Sign Up</a
+          >
+          <a
+            href="#listing-container"
+            class="px-6 py-3 border border-white hover:bg-white hover:text-black transition rounded-lg"
+            >View Listings</a
+          >
+        </div>
+      </div>
+    </section>
     <main class="p-4">
-      <h1 class="text-3xl text-green-500">Auction House</h1>
       <section id="search-section" class="py-8 bg-white flex justify-center">
         <form id="search-form" class="w-full max-w-md">
           <input
@@ -63,32 +94,6 @@
             class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-blue-300 bg-white text-black"
           />
         </form>
-      </section>
-
-      <section id="new-listing-section" class="bg-red-500 mb-8">
-        <h2 class="text-2xl mb-4">New Listing</h2>
-
-        <div class="relative w-full max-w-[1000px] mx-auto my-5">
-          <button
-            id="prevNew"
-            class="absolute left-0 top-1/2 -translate-y-1/2 z-10 p-2 bg-black text-white rounded-full"
-            aria-label="Previous"
-          >
-            ‹
-          </button>
-          <div
-            id="newListingCarousel"
-            class="flex overflow-x-auto snap-x snap-mandatory scroll-smooth scrollbar-hide"
-          ></div>
-
-          <button
-            id="nextNew"
-            class="absolute right-0 top-1/2 -translate-y-1/2 z-10 p-2 bg-black text-white rounded-full"
-            aria-label="Next"
-          >
-            ›
-          </button>
-        </div>
       </section>
       <section
         id="filter-section"

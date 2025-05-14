@@ -1,7 +1,13 @@
-import { getSingleListing, updateListing, deleteListing } from "./api.js";
+import {
+  getSingleListing,
+  updateListing,
+  deleteListing,
+  placeBid,
+} from "./api.js";
 import { getLoggedInUser } from "./auth/auth.js";
 import { showMessage } from "./utils/message.js";
 import { showSkeletonLoader } from "./utils/skeletonLoader.js";
+import { renderEndsAt } from "./utils/timeRemaining.js";
 
 function renderBidHistory(bids) {
   const historyContainer = document.getElementById("bid-history");
@@ -14,23 +20,37 @@ function renderBidHistory(bids) {
   historyContainer.innerHTML = "";
 
   if (!Array.isArray(bids) || bids.length === 0) {
-    showMessage(historyContainer, "No bids yet.");
+    showMessage(
+      historyContainer,
+      "No bids yet. Be the first to start the auction!"
+    );
     return;
   }
 
-  bids.forEach((bid) => {
+  const sortedBids = [...bids].sort(
+    (a, b) => Number(b.amount) - Number(a.amount)
+  );
+
+  sortedBids.forEach((bid) => {
+    const item = document.createElement("div");
+    item.className = "flex justify-between py-2 border-b";
+  });
+
+  sortedBids.forEach((bid) => {
     const item = document.createElement("div");
     item.className = "flex justify-between py-2 border-b";
 
-    const bidderSpan = document.createElement("span");
-    bidderSpan.textContent = bid.bidder?.name || bid.bidderEmail || "Unknown";
-    bidderSpan.className = "font-medium";
+    const bidderLink = document.createElement("a");
+    const name = bid.bidder?.name || bid.bidderEmail || "Unknown";
+    bidderLink.textContent = name;
+    bidderLink.href = `/account/profile.html?user=${encodeURIComponent(name)}`;
+    bidderLink.className = "font-medium hover:underline";
 
     const amountSpan = document.createElement("span");
-    amountSpan.textContent = `$${Number(bid.amount).toFixed(2)}`;
+    amountSpan.textContent = `${Number(bid.amount)} Coins`;
     amountSpan.className = "text-indigo-600 font-semibold";
 
-    item.append(bidderSpan, amountSpan);
+    item.append(bidderLink, amountSpan);
     historyContainer.appendChild(item);
   });
 }
@@ -68,7 +88,14 @@ document.addEventListener("DOMContentLoaded", async () => {
         typeof data.seller === "string"
           ? data.seller
           : data.seller.name || data.seller.email;
-      sellerEl.textContent = sellerName;
+      sellerEl.innerHTML = "";
+      const link = document.createElement("a");
+      link.href = `/account/profile.html?user=${encodeURIComponent(
+        sellerName
+      )}`;
+      link.textContent = sellerName;
+      link.className = "hover:underline font-medium";
+      sellerEl.appendChild(link);
     }
 
     if (data.media?.length) {
@@ -91,9 +118,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.getElementById("listing-created").textContent = new Date(
       data.created
     ).toLocaleString();
-    document.getElementById("listing-endsAt").textContent = new Date(
-      data.endsAt
-    ).toLocaleString();
+    const endsAtEl = document.getElementById("listing-endsAt");
+    const endsAtDate = new Date(data.endsAt);
+    endsAtEl.textContent = renderEndsAt(endsAtDate);
+    endsAtEl.title = `Ends at ${endsAtDate.toLocaleString()}`;
     document.getElementById("listing-updated").textContent = new Date(
       data.updated
     ).toLocaleString();
@@ -134,6 +162,62 @@ document.addEventListener("DOMContentLoaded", async () => {
     console.log(
       `Comparing: Current user "${currentUsername}" with seller "${sellerName}"`
     );
+
+    const placeBidBtn = document.getElementById("placeBidBtn");
+    const bidSection = document.getElementById("bid-section");
+    const bidForm = document.getElementById("bid-form");
+    const bidMessage = document.getElementById("bid-message");
+
+    if (currentUsername === sellerName) {
+      placeBidBtn.style.display = "none";
+    } else {
+      placeBidBtn.addEventListener("click", () => {
+        bidSection.classList.toggle("hidden");
+      });
+
+      bidForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        bidMessage.textContent = "";
+
+        const amountInput = document.getElementById("bid-amount");
+        const submitBtn = bidForm.querySelector("button[type=submit]");
+        const amount = parseFloat(amountInput.value);
+
+        placeBidBtn.disabled = true;
+        amountInput.disabled = true;
+        submitBtn.disabled = true;
+
+        try {
+          const updated = await placeBid(id, amount);
+
+          renderBidHistory(updated.bids);
+          document.getElementById("listing-bids").textContent =
+            updated._count.bids;
+
+          bidMessage.textContent = "🎉 Bid placed!";
+          bidMessage.className = "mt-2 text-green-600";
+
+          setTimeout(() => {
+            bidSection.classList.add("hidden");
+            bidMessage.textContent = "";
+          }, 2000);
+
+          document.getElementById("bid-history").scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+          });
+
+          bidForm.reset();
+        } catch (err) {
+          bidMessage.textContent = `Something went wrong: ${err.message}`;
+          bidMessage.className = "mt-2 text-red-500";
+        } finally {
+          placeBidBtn.disabled = false;
+          amountInput.disabled = false;
+          submitBtn.disabled = false;
+        }
+      });
+    }
 
     if (currentUsername && sellerName && currentUsername === sellerName) {
       console.log("✅ User is the seller - showing edit controls");

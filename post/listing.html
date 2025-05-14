@@ -13,9 +13,7 @@
   <body class="bg-gray-100">
     <header>
       <nav class="flex justify-between items-center bg-black p-4 relative">
-        <a href="index.html" class="text-white text-xl font-bold"
-          >Auction House</a
-        >
+        <a href="/" class="text-white text-xl font-bold">Auction House</a>
         <input type="checkbox" id="menu-toggle" class="hidden" />
         <label
           for="menu-toggle"
@@ -28,9 +26,7 @@
           class="list-none flex-col absolute top-full left-0 w-full bg-black p-4 hidden md:flex md:flex-row md:static md:w-auto md:p-0"
         >
           <li>
-            <a
-              href="index.html"
-              class="text-white px-2 py-1 hover:text-gray-400"
+            <a href="/" class="text-white px-2 py-1 hover:text-gray-400"
               >Home</a
             >
           </li>
@@ -51,13 +47,13 @@
 
       <div
         id="single-listing-container"
-        class="hidden bg-white rounded-3xl shadow-xl overflow-hidden"
+        class="hidden rounded-3xl overflow-hidden"
       >
         <img
           id="listing-media"
           src=""
           alt="Listing Image"
-          class="w-full h-96 object-cover"
+          class="w-full max-h-96 object-contain mb-8"
         />
 
         <div class="p-8 space-y-6">
@@ -71,11 +67,8 @@
               ></h1>
             </div>
           </div>
-
           <p id="listing-description" class="text-gray-700 leading-relaxed"></p>
-
           <div id="listing-tags" class="flex flex-wrap gap-2"></div>
-
           <div
             class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-gray-600 text-sm"
           >
@@ -93,14 +86,12 @@
             </div>
             <div class="flex items-center space-x-2">
               <i class="fas fa-hourglass-end"></i
-              ><span
-                ><strong>Ends At:</strong> <time id="listing-endsAt"></time
-              ></span>
+              ><span><time id="listing-endsAt"></time></span>
             </div>
             <div class="flex items-center space-x-2">
               <i class="fas fa-sync-alt"></i
               ><span
-                ><strong>Updated:</strong> <time id="listing-updated"></time
+                ><strong>Update:</strong> <time id="listing-updated"></time
               ></span>
             </div>
           </div>
@@ -110,7 +101,7 @@
               id="placeBidBtn"
               class="flex items-center px-6 py-3 bg-indigo-600 text-white rounded-full hover:bg-indigo-700 transition-shadow shadow-md"
             >
-              <i class="fas fa-gavel mr-2"></i>Place a Bid
+              <p>Place a bid</p>
             </button>
             <div id="listing-actions" class="hidden flex space-x-2">
               <button
@@ -120,6 +111,25 @@
                 <i class="fas fa-edit mr-1"></i>Edit
               </button>
             </div>
+          </div>
+          <div id="bid-section" class="mt-6 hidden">
+            <form id="bid-form" class="flex items-center space-x-2">
+              <input
+                type="number"
+                step="0.01"
+                id="bid-amount"
+                placeholder="Your bid"
+                required
+                class="w-32 p-2 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-indigo-300"
+              />
+              <button
+                type="submit"
+                class="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 transition"
+              >
+                Submit
+              </button>
+            </form>
+            <div id="bid-message" class="mt-2 text-sm"></div>
           </div>
 
           <div class="mt-8">
