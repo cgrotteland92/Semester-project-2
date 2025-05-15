@@ -10,6 +10,7 @@ const slides = [
   "https://images.unsplash.com/photo-1551201602-3f9456f0fbf8?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
   "https://images.unsplash.com/photo-1470940511639-1068d7764233?q=80&w=2074&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
 ];
+
 let currentSlide = 0;
 const welcomeImg = document.getElementById("welcome-image");
 if (welcomeImg) {
@@ -23,86 +24,41 @@ const newListingContainer = document.getElementById("new-listing-container");
 const allPostsContainer = document.getElementById("listing-container");
 
 let allListings = [];
-let currentPage = 1;
-const pageSize = 12;
 
-/**
- * Fetches posts using the provided fetch function and renders them,
- * showing skeleton loaders while waiting.
- */
 async function displayPosts(fetchFunction) {
-  console.log("Fetching posts...");
-  if (newListingContainer) {
-    newListingContainer.innerHTML = "";
-    showSkeletonLoader(newListingContainer, 5);
-  }
-  if (allPostsContainer) {
-    allPostsContainer.innerHTML = "";
-    showSkeletonLoader(allPostsContainer, 5);
-  }
+  if (newListingContainer) showSkeletonLoader(newListingContainer, 5);
+  if (allPostsContainer) showSkeletonLoader(allPostsContainer, 5);
 
   try {
     const postsResponse = await fetchFunction();
-    console.log("Fetched posts:", postsResponse);
     if (!postsResponse || !Array.isArray(postsResponse.data)) {
       throw new Error("No posts available");
     }
-    renderPosts(postsResponse.data);
-    setupFilter();
+
+    const now = Date.now();
+    const validPosts = postsResponse.data
+      .map((p) => ({
+        ...p,
+        created: new Date(p.created),
+        endsAt: new Date(p.endsAt),
+      }))
+      .filter((p) => p.endsAt.getTime() > now)
+      .sort((a, b) => b.created - a.created);
+
+    allListings = validPosts;
+
+    const limitedPosts = validPosts.slice(0, 6);
+    renderSection(limitedPosts, allPostsContainer, "No listings available.");
   } catch (error) {
     console.error("Error displaying posts:", error);
-    [newListingContainer, allPostsContainer].forEach((c) => {
-      if (c)
-        showMessage(c, "Error loading posts. Please try again later.", true);
-    });
+    showMessage(
+      allPostsContainer,
+      "Error loading posts. Please try again later.",
+      true
+    );
   }
 }
 
-/**
- * Parses dates, sorts posts newest-first, and renders sections.
- */
-function renderPosts(data) {
-  console.log("Rendering posts with data:", data);
-  const posts = data.map((p) => ({
-    ...p,
-    created: new Date(p.created),
-    endsAt: new Date(p.endsAt),
-  }));
-
-  const sortedPosts = posts.sort((a, b) => b.created - a.created);
-  allListings = sortedPosts;
-  console.log("Sorted posts:", sortedPosts);
-
-  renderSection(sortedPosts, allPostsContainer, "No listings available.");
-}
-
-/**
- * Sets up sorting/filtering.
- */
-function setupFilter() {
-  const sortFilter = document.getElementById("sort-filter");
-  if (!sortFilter) return;
-
-  sortFilter.addEventListener("change", () => {
-    const value = sortFilter.value;
-    const now = Date.now();
-    let filtered = [...allListings];
-
-    if (value === "newest") {
-      filtered.sort((a, b) => b.created - a.created);
-    } else if (value === "oldest") {
-      filtered.sort((a, b) => a.created - b.created);
-    } else if (value === "ended") {
-      filtered = filtered.filter((p) => p.endsAt.getTime() < now);
-    }
-
-    renderSection(filtered, allPostsContainer, "No listings available.");
-  });
-}
-
-/**
- * Renders the listing grid.
- */
 function renderSection(posts, container, emptyMessage) {
   const MAX_LEN = 100;
   container.innerHTML = "";
@@ -112,37 +68,7 @@ function renderSection(posts, container, emptyMessage) {
     return;
   }
 
-  posts.forEach((post, i) => {
-    if (i === 12) {
-      const ad = document.createElement("div");
-      ad.className =
-        "col-span-full bg-blue-100 rounded-lg shadow p-6 text-center";
-
-      const adImg = document.createElement("img");
-      adImg.src = "https://source.unsplash.com/600x200/?auction,featured";
-      adImg.alt = "Premium Listings";
-      adImg.className = "w-full h-40 object-cover rounded mb-4";
-      ad.appendChild(adImg);
-
-      const adTitle = document.createElement("h3");
-      adTitle.textContent = "Sponsored";
-      adTitle.className = "text-2xl font-semibold mb-2";
-      ad.appendChild(adTitle);
-
-      const adCopy = document.createElement("p");
-      adCopy.textContent = "Check out our premium listings!";
-      adCopy.className = "text-gray-700 mb-4";
-      ad.appendChild(adCopy);
-
-      const adButton = document.createElement("a");
-      adButton.href = "/premium";
-      adButton.textContent = "Learn More";
-      adButton.className = "px-4 py-2 bg-green-500 text-white rounded-lg";
-      ad.appendChild(adButton);
-
-      container.appendChild(ad);
-    }
-
+  posts.forEach((post) => {
     const link = document.createElement("a");
     link.href = `/post/listing.html?id=${encodeURIComponent(post.id)}`;
     link.className = "block";
@@ -232,13 +158,48 @@ function renderSection(posts, container, emptyMessage) {
     link.appendChild(card);
     container.appendChild(link);
   });
+
+  const viewAll = document.createElement("a");
+  viewAll.href = "/post/allPosts.html";
+  viewAll.textContent = "→ Browse listings";
+  viewAll.className =
+    "block mt-8 text-center text-indigo-600 font-semibold hover:underline";
+  container.appendChild(viewAll);
+
+  const ad = document.createElement("div");
+  ad.className =
+    "mt-8 col-span-full bg-yellow-100 rounded-lg shadow p-6 text-center";
+
+  const adTitle = document.createElement("h3");
+  adTitle.textContent = "✨ Promote Your Auction!";
+  adTitle.className = "text-xl font-semibold mb-2";
+  ad.appendChild(adTitle);
+
+  const adCopy = document.createElement("p");
+  adCopy.textContent =
+    "Boost your visibility by upgrading to a premium listing.";
+  adCopy.className = "text-gray-700 mb-4";
+  ad.appendChild(adCopy);
+
+  const adButton = document.createElement("a");
+  adButton.href = "/premium";
+  adButton.textContent = "Learn More";
+  adButton.className =
+    "inline-block px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600 transition";
+  ad.appendChild(adButton);
+
+  container.appendChild(ad);
 }
 
 const stored = localStorage.getItem("user");
 const user = stored ? JSON.parse(stored) : null;
-const filter =
-  user && user.name
+
+const filter = {
+  _active: true,
+  limit: 100,
+  ...(user && user.name
     ? { seller: user.name, _seller: true, _bids: true }
-    : { _seller: true, _bids: true };
+    : { _seller: true, _bids: true }),
+};
 
 displayPosts(() => fetchPosts(filter));

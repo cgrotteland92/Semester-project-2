@@ -224,7 +224,7 @@ export async function fetchPosts(params = {}) {
     return await response.json();
   } catch (error) {
     console.error("Error fetching posts:", error);
-    throw error; // rethrow so displayPosts can catch
+    throw error;
   }
 }
 
