@@ -2,6 +2,7 @@ import {
   getUserProfile,
   getUserPosts,
   getUserBids,
+  getUserWins,
   updateUserProfile,
   createListing,
 } from "../api.js";
@@ -26,6 +27,7 @@ document.addEventListener("DOMContentLoaded", () => {
   loadProfile(username);
   loadUserPosts(username);
   loadUserBids(username);
+  loadUserWins(username);
 
   if (username === me) {
     setupEditProfile(username);
@@ -34,64 +36,109 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 /**
- * Fetches all bids by this user and renders them in the same card style as posts
+ * Fetches user wins and renders them in the wins grid
  */
-async function loadUserBids(username) {
-  const grid = document.getElementById("bids-grid");
-  if (!grid) return console.warn("#bids-grid not found");
-  showSkeletonLoader(grid, 3);
+async function loadUserWins(username) {
+  const container = document.getElementById("wins-grid");
+  if (!container) return;
+  showSkeletonLoader(container, 3);
 
   try {
-    const { data: bids } = await getUserBids(username);
-    grid.innerHTML = "";
+    const { data: wins } = await getUserWins(username);
+    container.innerHTML = "";
 
-    if (bids.length === 0) {
-      showMessage(grid, "No bids placed yet.");
+    if (wins.length === 0) {
+      showMessage(container, "No wins yet.");
       return;
     }
 
-    bids.forEach((bid) => {
-      const card = document.createElement("div");
-      card.className = "bg-white rounded-lg shadow p-4 flex flex-col h-full";
+    const wrapper = document.createElement("div");
+    wrapper.className = "max-w-xs w-full";
 
-      const mediaItem = bid.listing.media?.[0];
-      if (mediaItem) {
-        const img = document.createElement("img");
-        img.src = mediaItem.url;
-        img.alt = mediaItem.alt || bid.listing.title;
-        img.className = "w-full h-48 object-cover rounded-md mb-3";
-        card.appendChild(img);
-      }
+    const toggle = document.createElement("button");
+    toggle.textContent = `Wins (${wins.length}) ▼`;
+    toggle.className =
+      "w-full text-sm px-3 py-2 bg-green-600 text-white rounded hover:bg-green-700";
+    wrapper.appendChild(toggle);
 
-      const titleEl = document.createElement("h3");
-      titleEl.textContent = bid.listing.title;
-      titleEl.className = "font-semibold text-lg mb-2 break-words";
-      card.appendChild(titleEl);
-
-      const amountEl = document.createElement("p");
-      amountEl.textContent = `Placed bid of: ${Number(bid.amount)} Coins`;
-      amountEl.className = "text-indigo-600 font-semibold mb-1";
-      card.appendChild(amountEl);
-
-      const endsEl = document.createElement("p");
-      const endsAtDate = new Date(bid.listing.endsAt);
-      endsEl.textContent = renderEndsAt(endsAtDate);
-      endsEl.title = `Ends at ${endsAtDate.toLocaleString()}`;
-      endsEl.className = "text-gray-700 text-sm mb-1";
-      card.appendChild(endsEl);
-
+    const list = document.createElement("ul");
+    list.className =
+      "hidden mt-1 border divide-y rounded shadow bg-white max-h-40 overflow-y-auto text-sm";
+    wins.forEach((win) => {
+      const li = document.createElement("li");
+      li.className = "flex justify-between px-3 py-2";
       const link = document.createElement("a");
-      link.href = `/post/listing.html?id=${encodeURIComponent(bid.listing.id)}`;
-      link.appendChild(card);
-
-      grid.appendChild(link);
+      link.textContent = win.title;
+      link.href = `/post/listing.html?id=${encodeURIComponent(win.id)}`;
+      link.className = "flex-1 text-blue-600 hover:underline truncate";
+      const when = document.createElement("span");
+      when.textContent = `Won ${new Date(win.endsAt).toLocaleDateString()}`;
+      when.className = "ml-2 text-gray-700";
+      li.append(link, when);
+      list.appendChild(li);
     });
+    wrapper.appendChild(list);
+    container.appendChild(wrapper);
+
+    toggle.addEventListener("click", () => list.classList.toggle("hidden"));
   } catch (err) {
-    console.error("Could not load user bids:", err);
-    grid.innerHTML = "";
-    showMessage(grid, "Error loading bids.", true);
+    console.error("Could not load user wins:", err);
+    showMessage(container, "Error loading wins.", true);
   }
 }
+
+/**
+ * Fetches all bids by this user and renders them in the same card style as posts
+ */
+async function loadUserBids(username) {
+  const container = document.getElementById("bids-grid");
+  if (!container) return;
+  showSkeletonLoader(container, 3);
+
+  try {
+    const { data: bids } = await getUserBids(username);
+    container.innerHTML = "";
+
+    if (bids.length === 0) {
+      showMessage(container, "No bids placed yet.");
+      return;
+    }
+
+    const wrapper = document.createElement("div");
+    wrapper.className = "max-w-xs w-full";
+
+    const toggle = document.createElement("button");
+    toggle.textContent = `Bids (${bids.length}) ▼`;
+    toggle.className =
+      "w-full text-sm px-3 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700";
+    wrapper.appendChild(toggle);
+
+    const list = document.createElement("ul");
+    list.className =
+      "hidden mt-1 border divide-y rounded shadow bg-white max-h-40 overflow-y-auto text-sm";
+    bids.forEach((bid) => {
+      const li = document.createElement("li");
+      li.className = "flex justify-between px-3 py-2";
+      const link = document.createElement("a");
+      link.textContent = bid.listing.title;
+      link.href = `/post/listing.html?id=${encodeURIComponent(bid.listing.id)}`;
+      link.className = "flex-1 text-blue-600 hover:underline truncate";
+      const price = document.createElement("span");
+      price.textContent = `${Number(bid.amount).toFixed(2)} Coins`;
+      price.className = "ml-2 text-gray-700";
+      li.append(link, price);
+      list.appendChild(li);
+    });
+    wrapper.appendChild(list);
+    container.appendChild(wrapper);
+
+    toggle.addEventListener("click", () => list.classList.toggle("hidden"));
+  } catch (err) {
+    console.error("Could not load user bids:", err);
+    showMessage(container, "Error loading bids.", true);
+  }
+}
+
 /**
  * Fetches profile info and injects into the DOM & pre-fills the edit form
  */

@@ -47,7 +47,7 @@ function renderBidHistory(bids) {
     bidderLink.className = "font-medium hover:underline";
 
     const amountSpan = document.createElement("span");
-    amountSpan.textContent = `${Number(bid.amount)} Coins`;
+    amountSpan.textContent = `${Number(bid.amount)} 🪙`;
     amountSpan.className = "text-indigo-600 font-semibold";
 
     item.append(bidderLink, amountSpan);
