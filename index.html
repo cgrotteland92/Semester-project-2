@@ -10,54 +10,54 @@
     ></script>
     <title>Auction House</title>
   </head>
-  <body class="bg-gray-100">
+  <body class="bg-primary">
     <header>
-      <nav class="relative bg-black p-4 flex justify-between items-center">
+      <nav class="relative bg-secondary p-4 flex justify-between items-center">
         <div class="logo">
-          <a href="index.html" class="text-white text-xl no-underline">
+          <a href="index.html" class="text-[#DA7756] text-xl no-underline">
             Auction House
           </a>
         </div>
         <button
           id="burger-menu-btn"
-          class="md:hidden z-30 text-white text-2xl"
+          class="md:hidden z-30 text-headers text-2xl"
           aria-label="Toggle menu"
         >
           <i class="fas fa-bars"></i>
         </button>
         <ul
           id="nav-menu"
-          class="list-none absolute top-full left-0 w-full bg-black p-4 hidden flex-col z-20 md:flex md:flex-row md:static md:w-auto md:p-0"
+          class="list-none absolute top-full left-0 w-full bg-secondary p-4 hidden flex-col z-20 md:flex md:flex-row md:static md:w-auto md:p-0"
         >
           <li>
             <a
               href="index.html"
-              class="text-white text-base no-underline block p-2 transition-colors duration-300 ease-in-out hover:text-gray-500"
+              class="text-headers text-base no-underline block p-2 transition-colors duration-300 ease-in-out hover:text-gray-500"
               >Home</a
             >
           </li>
           <li>
             <a
               href="/post/allPosts.html"
-              class="text-white text-base no-underline block p-2 transition-colors duration-300 ease-in-out hover:text-gray-500"
+              class="text-headers text-base no-underline block p-2 transition-colors duration-300 ease-in-out hover:text-gray-500"
               >Listings</a
             >
           </li>
-          <li id="nav-user-credits-display" class="text-white p-2 hidden">
+          <li id="nav-user-credits-display" class="text-headers p-2 hidden">
             <a
               id="nav-profile-link"
               href="/account/profile.html"
-              class="text-white text-base no-underline transition-colors duration-300 ease-in-out hover:text-gray-500 mr-2"
+              class="text-headers text-base no-underline transition-colors duration-300 ease-in-out hover:text-gray-500 mr-2"
             >
               <span id="nav-user-name"></span>
             </a>
-            <span id="nav-user-credits" class="text-yellow-400"></span>
+            <span id="nav-user-credits" class="text-[#DA7756]"></span>
           </li>
           <li id="nav-login-container">
             <a
               href="/account/login.html"
               id="nav-login-logout"
-              class="text-white text-base no-underline block p-2 transition-colors duration-300 ease-in-out hover:text-gray-500"
+              class="text-headers text-base no-underline block p-2 transition-colors duration-300 ease-in-out hover:text-gray-500"
               >Log In</a
             >
           </li>
@@ -85,7 +85,7 @@
         <div class="space-x-4">
           <a
             href="/account/register.html"
-            class="px-6 py-3 bg-green-500 hover:bg-green-600 text-white rounded-lg transition"
+            class="px-6 py-3 bg-[#DA7756] hover:bg-[#da7756ab] text-white rounded-lg transition"
             >Sign Up</a
           >
           <a
@@ -97,13 +97,21 @@
       </div>
     </section>
     <main class="p-4">
-      <h2 class="text-2xl font-bold mb-4 text-center">Recommended for you</h2>
+      <div class="text-center mb-4">
+        <h2 class="text-2xl font-bold mb-4">Recommended</h2>
+        <a
+          href="/post/allPosts.html"
+          class="text-lg text-headers hover:underline"
+        >
+          → View all listings here
+        </a>
+      </div>
       <div
         id="listing-container"
         class="relative z-0 w-full max-w-[1200px] mx-auto my-5 mt-16 columns-1 sm:columns-2 lg:columns-3 gap-x-4 gap-y-4 px-4"
       ></div>
     </main>
-    <footer class="bg-black text-white text-center p-4 relative w-full">
+    <footer class="bg-secondary text-headers text-center p-4 relative w-full">
       <p>&copy; 2025 Auction House. All Rights Reserved.</p>
     </footer>
     <script type="module" src="./js/nav.js" defer></script>

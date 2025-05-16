@@ -28,17 +28,17 @@ export function renderSection(posts, container, emptyMessage) {
 
     const title = document.createElement("h3");
     title.textContent = post.title;
-    title.className = "font-semibold text-lg mb-2 truncate";
+    title.className = "font-semibold text-lg text-headers mb-2 truncate";
     card.appendChild(title);
 
     const sellerWrapper = document.createElement("p");
-    sellerWrapper.className = "flex items-center text-gray-600 text-sm mb-2";
+    sellerWrapper.className = "flex items-center text-headers text-sm mb-2";
 
     const avatarImg = document.createElement("img");
     avatarImg.src = post.seller?.avatar?.url;
     avatarImg.alt =
       post.seller?.avatar?.alt || post.seller?.name || "Seller avatar";
-    avatarImg.className = "w-6 h-6 rounded-full mr-2";
+    avatarImg.className = "w-8 h-8 rounded-full mr-2";
     sellerWrapper.appendChild(avatarImg);
 
     const sellerLink = document.createElement("a");
@@ -54,14 +54,14 @@ export function renderSection(posts, container, emptyMessage) {
 
     const fullText = post.description || "";
     const desc = document.createElement("p");
-    desc.className = "text-gray-700 text-sm flex-grow truncate";
+    desc.className = "text-headers text-sm flex-grow truncate";
     if (fullText.length > MAX_LEN) {
       const shortText = fullText.slice(0, MAX_LEN) + "... ";
       desc.textContent = shortText;
 
       const moreText = document.createElement("span");
       moreText.textContent = "Read more";
-      moreText.className = "text-blue-500 underline text-sm cursor-pointer";
+      moreText.className = "text-headers underline text-sm cursor-pointer";
       moreText.addEventListener("click", () => {
         if (moreText.textContent === "Read more") {
           desc.textContent = fullText + " ";
@@ -84,7 +84,7 @@ export function renderSection(posts, container, emptyMessage) {
       const span = document.createElement("span");
       span.textContent = tag;
       span.className =
-        "px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs mr-2 mb-2";
+        "px-2 py-1 bg-[#DA7756] text-white rounded-full text-xs mr-2 mb-2";
       tagsDiv.appendChild(span);
     });
     card.appendChild(tagsDiv);
@@ -92,8 +92,8 @@ export function renderSection(posts, container, emptyMessage) {
     const endsAt = document.createElement("p");
     const endDate = new Date(post.endsAt);
     endsAt.textContent = renderEndsAt(endDate);
-    endsAt.title = `Ends at ${endDate.toLocaleString()}`;
-    endsAt.className = "text-gray-500 text-xs mt-2";
+    endsAt.title = ` Ends at ${new Date(post.endsAt).toLocaleString()}`;
+    endsAt.className = "text-headers text-xs mt-2";
     card.appendChild(endsAt);
 
     link.appendChild(card);

@@ -110,7 +110,7 @@ document.addEventListener("DOMContentLoaded", () => {
     prev.textContent = "‹ Prev";
     prev.disabled = currentPage === 1;
     prev.className =
-      "px-4 py-2 bg-gray-200 rounded disabled:opacity-50 hover:bg-gray-300";
+      "px-4 py-2 bg-white rounded disabled:opacity-50 hover:bg-gray-300";
     prev.onclick = () => {
       currentPage--;
       renderCurrentPage();
@@ -123,7 +123,7 @@ document.addEventListener("DOMContentLoaded", () => {
     next.textContent = "Next ›";
     next.disabled = currentPage === totalPages;
     next.className =
-      "px-4 py-2 bg-gray-200 rounded disabled:opacity-50 hover:bg-gray-300";
+      "px-4 py-2 bg-white rounded disabled:opacity-50 hover:bg-gray-300";
     next.onclick = () => {
       currentPage++;
       renderCurrentPage();

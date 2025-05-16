@@ -59,7 +59,7 @@ async function loadUserBids(username) {
     bids.forEach((bid) => {
       const card = document.createElement("div");
       card.className =
-        "bg-white rounded-lg shadow overflow-hidden flex flex-col";
+        "bg-white shadow rounded-lg overflow-hidden flex flex-col";
 
       const body = document.createElement("div");
       body.className = "p-4 flex-1 flex flex-col";
@@ -78,7 +78,7 @@ async function loadUserBids(username) {
       const link = document.createElement("a");
       link.href = `/post/listing.html?id=${encodeURIComponent(bid.listing.id)}`;
       link.className =
-        "mt-auto inline-block bg-indigo-600 text-white px-3 py-2 rounded hover:bg-indigo-700 text-center";
+        "mt-auto inline-block bg-black text-white px-3 py-2 rounded hover:bg-gray-800 text-center";
       link.textContent = "View Listing";
       body.appendChild(link);
 
@@ -117,7 +117,7 @@ async function loadUserWins(username) {
     wins.forEach((win) => {
       const card = document.createElement("div");
       card.className =
-        "bg-white rounded-lg shadow overflow-hidden flex flex-col";
+        "bg-white shadow rounded-lg overflow-hidden flex flex-col";
 
       const body = document.createElement("div");
       body.className = "p-4 flex-1 flex flex-col";
@@ -134,7 +134,7 @@ async function loadUserWins(username) {
       const link = document.createElement("a");
       link.href = `/post/listing.html?id=${encodeURIComponent(win.id)}`;
       link.className =
-        "mt-auto inline-block bg-green-600 text-white px-3 py-2 rounded hover:bg-green-700 text-center";
+        "mt-auto inline-block bg-[#DA7756] hover:bg-[#da7756ab] text-white px-3 py-2 rounded text-center";
       link.textContent = "View Listing";
       body.appendChild(link);
 
@@ -194,7 +194,6 @@ async function loadUserPosts(username) {
   const grid = document.getElementById("posts-grid");
   if (!grid) return;
 
-  // Show skeletons, then switch to a 2-column layout on md+ screens
   showSkeletonLoader(grid, 3);
   grid.className = "grid grid-cols-1 md:grid-cols-2 gap-8";
 
@@ -208,18 +207,15 @@ async function loadUserPosts(username) {
     }
 
     posts.forEach((post) => {
-      // 1) The outer link
       const link = document.createElement("a");
       link.href = `/post/listing.html?id=${encodeURIComponent(post.id)}`;
       link.className = "block";
 
-      // 2) The card container
       const card = document.createElement("div");
       card.className =
-        "bg-white rounded-lg shadow-lg p-6 flex space-x-6 " +
+        "bg-white shadow rounded-lg p-6 flex space-x-6 " +
         "items-start hover:shadow-2xl transition duration-200";
 
-      // 3) Thumbnail (fixed size)
       const img = document.createElement("img");
       if (post.media?.[0]) {
         img.src = post.media[0].url;
@@ -229,26 +225,22 @@ async function loadUserPosts(username) {
         "w-40 h-40 object-cover rounded-md flex-shrink-0 bg-gray-100";
       card.appendChild(img);
 
-      // 4) Details column
       const details = document.createElement("div");
       details.className = "flex-1 flex flex-col";
 
-      // Title
       const title = document.createElement("h3");
       title.textContent = post.title;
-      title.className = "font-semibold text-xl mb-2";
+      title.className = "font-semibold text-xl text-headers mb-2";
       details.appendChild(title);
 
-      // Short description
       const desc = document.createElement("p");
-      desc.className = "text-gray-700 text-sm flex-grow mb-3";
+      desc.className = "text-gray-700 text-sm text-headers flex-grow mb-3";
       const fullText = post.description || "";
       const shortText =
         fullText.length > 120 ? fullText.slice(0, 120) + "…" : fullText;
       desc.textContent = shortText;
       details.appendChild(desc);
 
-      // Meta row
       const meta = document.createElement("div");
       meta.className = "flex items-center text-gray-500 text-sm space-x-4";
 
@@ -288,34 +280,32 @@ function setupCreateListing() {
     return;
   }
 
-  const toggleBtn = document.createElement("button");
-  toggleBtn.id = "btnToggleCreate";
-  toggleBtn.innerText = "Create Listing";
-  toggleBtn.className =
-    "bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 mb-4";
-  section.insertBefore(toggleBtn, section.firstChild);
-
+  const createBtn = document.getElementById("show-create-listing");
   const form = document.getElementById("create-listing-form");
-  const feedback = document.getElementById("create-feedback");
   const cancelBtn = document.getElementById("cancel-create-listing");
+  const feedback = document.getElementById("create-feedback");
 
-  toggleBtn.addEventListener("click", () => {
-    form.style.display = "block";
-    toggleBtn.style.display = "none";
+  if (!createBtn || !form || !cancelBtn || !feedback) return;
+
+  form.hidden = true;
+  createBtn.hidden = false;
+
+  createBtn.addEventListener("click", () => {
+    form.hidden = false;
+    createBtn.hidden = true;
   });
 
-  cancelBtn?.addEventListener("click", () => {
+  cancelBtn.addEventListener("click", () => {
     form.style.display = "none";
-    toggleBtn.style.display = "block";
+    create.style.display = "";
     feedback.style.display = "none";
     feedback.textContent = "";
   });
 
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
-    feedback.textContent = "";
-    feedback.className = "";
     feedback.style.display = "none";
+    feedback.textContent = "";
 
     const title = form["listing-title"].value.trim();
     const description = form["listing-description"].value.trim();
@@ -373,10 +363,15 @@ function setupEditProfile(username) {
   }
 
   const btnToggle = document.createElement("button");
-  btnToggle.id = "btnToggleEdit";
-  btnToggle.innerText = "Edit Profile";
+  btnToggle.id = "edit-profile-button";
   btnToggle.className =
-    "bg-black text-white py-2 px-4 rounded-md hover:bg-gray-800 mx-8 mb-4";
+    "absolute top-4 right-4 bg-white px-4 py-2 rounded-md shadow text-headers hover:bg-gray-100";
+  const icon = document.createElement("i");
+  icon.className = "fas fa-pencil-alt mr-2";
+  btnToggle.appendChild(icon);
+
+  btnToggle.appendChild(document.createTextNode("Edit Profile"));
+
   section.insertBefore(btnToggle, section.firstChild);
 
   const form = document.getElementById("edit-profile-form");

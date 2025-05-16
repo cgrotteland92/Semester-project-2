@@ -10,54 +10,54 @@
     ></script>
     <title>Post | Auction House</title>
   </head>
-  <body class="bg-gray-100">
+  <body class="bg-primary">
     <header>
-      <nav class="relative bg-black p-4 flex justify-between items-center">
+      <nav class="relative bg-secondary p-4 flex justify-between items-center">
         <div class="logo">
-          <a href="index.html" class="text-white text-xl no-underline">
+          <a href="index.html" class="text-[#DA7756] text-xl no-underline">
             Auction House
           </a>
         </div>
         <button
           id="burger-menu-btn"
-          class="md:hidden z-30 text-white text-2xl"
+          class="md:hidden z-30 text-headers text-2xl"
           aria-label="Toggle menu"
         >
           <i class="fas fa-bars"></i>
         </button>
         <ul
           id="nav-menu"
-          class="list-none absolute top-full left-0 w-full bg-black p-4 hidden flex-col z-20 md:flex md:flex-row md:static md:w-auto md:p-0"
+          class="list-none absolute top-full left-0 w-full bg-secondary p-4 hidden flex-col z-20 md:flex md:flex-row md:static md:w-auto md:p-0"
         >
           <li>
             <a
               href="/"
-              class="text-white text-base no-underline block p-2 transition-colors duration-300 ease-in-out hover:text-gray-500"
+              class="text-headers text-base no-underline block p-2 transition-colors duration-300 ease-in-out hover:text-gray-500"
               >Home</a
             >
           </li>
           <li>
             <a
               href="/post/allPosts.html"
-              class="text-white text-base no-underline block p-2 transition-colors duration-300 ease-in-out hover:text-gray-500"
+              class="text-headers text-base no-underline block p-2 transition-colors duration-300 ease-in-out hover:text-gray-500"
               >Listings</a
             >
           </li>
-          <li id="nav-user-credits-display" class="text-white p-2 hidden">
+          <li id="nav-user-credits-display" class="text-[#DA7756] p-2 hidden">
             <a
               id="nav-profile-link"
               href="/account/profile.html"
-              class="text-white text-base no-underline transition-colors duration-300 ease-in-out hover:text-gray-500 mr-2"
+              class="text-headers text-base no-underline transition-colors duration-300 ease-in-out hover:text-gray-500 mr-2"
             >
               <span id="nav-user-name"></span>
             </a>
-            <span id="nav-user-credits" class="text-yellow-400"></span>
+            <span id="nav-user-credits" class="text-headers"></span>
           </li>
           <li id="nav-login-container">
             <a
               href="/account/login.html"
               id="nav-login-logout"
-              class="text-white text-base no-underline block p-2 transition-colors duration-300 ease-in-out hover:text-gray-500"
+              class="text-headers text-base no-underline block p-2 transition-colors duration-300 ease-in-out hover:text-gray-500"
               >Log In</a
             >
           </li>
@@ -85,14 +85,14 @@
             <div class="flex items-center space-x-3">
               <h1
                 id="listing-title"
-                class="text-3xl font-bold text-gray-900"
+                class="text-3xl font-bold text-headers"
               ></h1>
             </div>
           </div>
-          <p id="listing-description" class="text-gray-700 leading-relaxed"></p>
+          <p id="listing-description" class="text-headers leading-relaxed"></p>
           <div id="listing-tags" class="flex flex-wrap gap-2"></div>
           <div
-            class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-gray-600 text-sm"
+            class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-headers text-sm"
           >
             <div class="flex items-center space-x-2">
               <i class="fas fa-user-circle"></i
@@ -121,14 +121,14 @@
           <div class="flex space-x-4">
             <button
               id="placeBidBtn"
-              class="flex items-center px-6 py-3 bg-indigo-600 text-white rounded-full hover:bg-indigo-700 transition-shadow shadow-md"
+              class="flex items-center px-6 py-3 bg-[#DA7756] hover:bg-[#da7756ab] text-white rounded-full"
             >
               <p>Place a bid</p>
             </button>
             <div id="listing-actions" class="hidden flex space-x-2">
               <button
                 id="btnToggleEditListing"
-                class="flex items-center px-4 py-2 bg-yellow-500 text-white rounded-full hover:bg-yellow-600 transition-shadow"
+                class="flex items-center px-4 py-2 bg-[#DA7756] hover:bg-[#da7756ab] text-white rounded-full"
               >
                 <i class="fas fa-edit mr-1"></i>Edit
               </button>
@@ -142,11 +142,11 @@
                 id="bid-amount"
                 placeholder="Your bid"
                 required
-                class="w-32 p-2 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-indigo-300"
+                class="w-32 p-2 border border-secondary rounded focus:outline-none focus:ring focus:ring-black"
               />
               <button
                 type="submit"
-                class="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 transition"
+                class="px-4 py-2 bg-[#DA7756] hover:bg-[#da7756ab] text-white rounded transition"
               >
                 Submit
               </button>
@@ -156,7 +156,7 @@
 
           <div class="mt-8">
             <h2
-              class="text-2xl font-semibold mb-4 flex items-center space-x-2 text-gray-800"
+              class="text-2xl font-semibold mb-4 flex items-center space-x-2 text-headers"
             >
               <i class="fas fa-history"></i
               ><span>Bids (<span id="listing-bids"></span>)</span>
@@ -287,7 +287,7 @@
       </div>
     </main>
 
-    <footer class="bg-black text-white text-center p-4">
+    <footer class="bg-secondary text-white text-center p-4">
       <p>&copy; 2025 Auction House. All Rights Reserved.</p>
     </footer>
 
