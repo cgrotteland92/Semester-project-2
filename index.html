@@ -12,22 +12,22 @@
   </head>
   <body class="bg-gray-100">
     <header>
-      <nav class="flex justify-between items-center bg-black p-4 relative">
+      <nav class="relative bg-black p-4 flex justify-between items-center">
         <div class="logo">
-          <a href="index.html" class="text-white text-xl no-underline"
-            >Auction House</a
-          >
+          <a href="index.html" class="text-white text-xl no-underline">
+            Auction House
+          </a>
         </div>
-        <input type="checkbox" id="menu-toggle" class="hidden" />
-        <label
-          for="menu-toggle"
-          class="cursor-pointer text-white text-2xl md:hidden"
+        <button
+          id="burger-menu-btn"
+          class="md:hidden z-30 text-white text-2xl"
+          aria-label="Toggle menu"
         >
           <i class="fas fa-bars"></i>
-        </label>
+        </button>
         <ul
           id="nav-menu"
-          class="list-none flex-col absolute top-full left-0 w-full bg-black p-4 hidden md:flex md:flex-row md:static md:w-auto md:p-0"
+          class="list-none absolute top-full left-0 w-full bg-black p-4 hidden flex-col z-20 md:flex md:flex-row md:static md:w-auto md:p-0"
         >
           <li>
             <a
@@ -43,35 +43,23 @@
               >Listings</a
             >
           </li>
-
-          <li id="user-info" class="relative block p-2">
-            <button id="nav-avatar-btn" class="focus:outline-none">
-              <img
-                id="nav-avatar"
-                src=""
-                alt="Profile"
-                class="w-8 h-8 rounded-full object-cover"
-              />
-            </button>
-            <div
-              id="nav-user-menu"
-              class="hidden absolute right-0 mt-2 w-40 bg-white rounded-lg shadow-lg overflow-hidden text-left z-20"
+          <li id="nav-user-credits-display" class="text-white p-2 hidden">
+            <a
+              id="nav-profile-link"
+              href="/account/profile.html"
+              class="text-white text-base no-underline transition-colors duration-300 ease-in-out hover:text-gray-500 mr-2"
             >
-              <div class="px-4 py-3 border-b">
-                <p id="nav-user-name" class="font-semibold text-gray-800"></p>
-                <p id="nav-user-credits" class="text-sm text-gray-500"></p>
-              </div>
-              <a
-                href="/account/profile.html"
-                class="block px-4 py-2 text-gray-700 hover:bg-gray-100"
-                >My Profile</a
-              >
-              <a
-                href="/account/logout"
-                class="block px-4 py-2 text-gray-700 hover:bg-gray-100"
-                >Log out</a
-              >
-            </div>
+              <span id="nav-user-name"></span>
+            </a>
+            <span id="nav-user-credits" class="text-yellow-400"></span>
+          </li>
+          <li id="nav-login-container">
+            <a
+              href="/account/login.html"
+              id="nav-login-logout"
+              class="text-white text-base no-underline block p-2 transition-colors duration-300 ease-in-out hover:text-gray-500"
+              >Log In</a
+            >
           </li>
         </ul>
       </nav>
