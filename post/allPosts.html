@@ -3,18 +3,18 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="css/output.css" />
+    <link rel="stylesheet" href="../css/output.css" />
     <script
       src="https://kit.fontawesome.com/ff0f99a23c.js"
       crossorigin="anonymous"
     ></script>
-    <title>Auction House</title>
+    <title>Post | Auction House</title>
   </head>
   <body class="bg-gray-100">
     <header>
       <nav class="relative bg-black p-4 flex justify-between items-center">
         <div class="logo">
-          <a href="index.html" class="text-white text-xl no-underline">
+          <a href="/" class="text-white text-xl no-underline">
             Auction House
           </a>
         </div>
@@ -31,7 +31,7 @@
         >
           <li>
             <a
-              href="index.html"
+              href="/"
               class="text-white text-base no-underline block p-2 transition-colors duration-300 ease-in-out hover:text-gray-500"
               >Home</a
             >
@@ -64,49 +64,47 @@
         </ul>
       </nav>
     </header>
-    <section
-      id="welcome-section"
-      class="relative w-full h-64 md:h-96 lg:h-[500px] flex items-center justify-center mb-8 overflow-hidden"
-    >
-      <img
-        id="welcome-image"
-        src="https://images.unsplash.com/photo-1597696929736-6d13bed8e6a8?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-        alt="Welcome to Auction House"
-        class="absolute inset-0 w-full h-full object-cover"
-      />
-      <div class="absolute inset-0 bg-black/50"></div>
-      <div class="relative z-10 text-center text-white px-4">
-        <h1 class="text-4xl md:text-5xl font-bold mb-4 drop-shadow-lg">
-          Welcome to Auction House
-        </h1>
-        <p class="text-lg md:text-xl mb-6 drop-shadow-lg">
-          Find the perfect item for you!
-        </p>
-        <div class="space-x-4">
-          <a
-            href="/account/register.html"
-            class="px-6 py-3 bg-green-500 hover:bg-green-600 text-white rounded-lg transition"
-            >Sign Up</a
-          >
-          <a
-            href="/post/allPosts.html"
-            class="px-6 py-3 border border-white hover:bg-white hover:text-black transition rounded-lg"
-            >View Listings</a
-          >
-        </div>
+    <main class="p-6 max-w-6xl mx-auto space-y-8">
+      <div class="flex justify-end mb-4">
+        <label for="sort-filter" class="mr-2 text-sm font-medium"
+          >Sort by:</label
+        >
+        <select id="sort-filter" class="border rounded p-1 text-sm">
+          <option value="" disabled selected>Active</option>
+          <option value="popular">Popular</option>
+          <option value="all">All</option>
+          <option value="newest">Newest</option>
+          <option value="oldest">Oldest</option>
+        </select>
       </div>
-    </section>
-    <main class="p-4">
-      <h2 class="text-2xl font-bold mb-4 text-center">Recommended for you</h2>
-      <div
-        id="listing-container"
-        class="relative z-0 w-full max-w-[1200px] mx-auto my-5 mt-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 px-4"
-      ></div>
+      <section>
+        <h1 class="text-2xl font-bold mb-4 text-center">
+          Browse or search for what you are looking for!
+        </h1>
+        <section id="search-section" class="flex justify-center mb-4">
+          <input
+            type="text"
+            id="search-input"
+            placeholder="Search..."
+            class="w-full max-w-md p-3 border rounded-lg focus:ring focus:ring-blue-300"
+          />
+        </section>
+        <div
+          id="all-listings-container"
+          class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+        ></div>
+        <div
+          id="pagination"
+          class="flex justify-center items-center space-x-4 mt-6 w-full"
+        ></div>
+      </section>
     </main>
-    <footer class="bg-black text-white text-center p-4 relative w-full">
+
+    <footer class="bg-black text-white text-center p-4">
       <p>&copy; 2025 Auction House. All Rights Reserved.</p>
     </footer>
-    <script type="module" src="./js/nav.js" defer></script>
-    <script type="module" src="./js/script.js" defer></script>
+
+    <script type="module" src="../js/nav.js" defer></script>
+    <script type="module" src="../js/allPosts.js" defer></script>
   </body>
 </html>

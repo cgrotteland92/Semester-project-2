@@ -1,7 +1,9 @@
-export function formatTimeRemaining(endDate) {
+export function formatTimeRemaining(targetDate) {
   const now = new Date();
-  const diff = endDate - now;
-  if (diff <= 0) return "Ended";
+  let diff = targetDate - now;
+
+  const isPast = diff <= 0;
+  if (isPast) diff = now - targetDate;
 
   const msInMin = 60 * 1000;
   const msInHour = 60 * msInMin;
@@ -15,5 +17,17 @@ export function formatTimeRemaining(endDate) {
   if (days) parts.push(`${days}d`);
   if (hours) parts.push(`${hours}h`);
   if (mins) parts.push(`${mins}m`);
-  return parts.join(" ") || "Less than a minute";
+  const result = parts.join(" ") || "Less than a minute";
+
+  return isPast ? `${result} ago` : result;
+}
+
+/**
+ * Turns an end date into either "Ended" or a countdown string.
+ */
+export function renderEndsAt(date) {
+  const now = Date.now();
+  return date.getTime() < now
+    ? "Ended"
+    : `Ends in: ${formatTimeRemaining(date)}`;
 }

@@ -10,7 +10,7 @@ export const headers = {
 /* --------------------- AUTH & USER ENDPOINTS --------------------- */
 /**
  * Fetch a single user profile by name.
- * @param {string} profileName - The profile's id or name.
+ * @param {string} profileName
  * @returns {Promise<Object>}
  */
 export async function getUserProfile(profileName) {
@@ -33,7 +33,7 @@ export async function getUserProfile(profileName) {
 
 /**
  * Fetch posts for a specific user/profile.
- * @param {string} profileName - The profile's id or name.
+ * @param {string} profileName
  * @returns {Promise<Object>}
  */
 export async function getUserPosts(profileName) {
@@ -55,8 +55,8 @@ export async function getUserPosts(profileName) {
 /**
  * Update a user’s profile (bio, avatar, banner).
  * @param {string} profileName
- * @param {Object} payload – any of { bio, avatar: {url,alt}, banner: {url,alt} }
- * @returns {Promise<Object>} the updated { data, meta }
+ * @param {Object} payload
+ * @returns {Promise<Object>}
  */
 export async function updateUserProfile(profileName, payload) {
   try {
@@ -78,7 +78,7 @@ export async function updateUserProfile(profileName, payload) {
 
 /**
  * Register a new user.
- * @param {Object} userData - The data for registration.
+ * @param {Object} userData
  */
 export async function registerUser(userData) {
   const response = await fetch(`${BASE_API_URL}/auth/register`, {
@@ -98,7 +98,7 @@ export async function registerUser(userData) {
 
 /**
  * Login a user.
- * @param {Object} userData - The login credentials.
+ * @param {Object} userData
  */
 export async function loginUser(userData) {
   try {
@@ -119,13 +119,13 @@ export async function loginUser(userData) {
 
 /**
  * Create a new auction listing.
- * @param {Object} listingData - The listing data to create
- * @param {string} listingData.title - Title of the listing (required)
- * @param {string} [listingData.description] - Description of the listing
- * @param {Array<string>} [listingData.tags] - Array of tags for the listing
- * @param {Array<string>} [listingData.media] - Array of media URLs for the listing
- * @param {string} listingData.endsAt - ISO date string for when the auction ends (required)
- * @returns {Promise<Object>} - The created listing data
+ * @param {Object} listingData
+ * @param {string} listingData.title
+ * @param {string} [listingData.description]
+ * @param {Array<string>} [listingData.tags]
+ * @param {Array<string>} [listingData.media]
+ * @param {string} listingData.endsAt
+ * @returns {Promise<Object>}
  */
 export async function createListing(listingData) {
   try {
@@ -167,9 +167,9 @@ export async function createListing(listingData) {
  */
 export async function updateListing(id, listingData) {
   const res = await fetch(
-    `${BASE_API_URL}/auction/listings/${encodeURIComponent(id)}?_seller=true`,
+    `${BASE_API_URL}/auction/listings/${encodeURIComponent(id)}`,
     {
-      method: "PATCH",
+      method: "PUT",
       headers,
       body: JSON.stringify(listingData),
     }
@@ -184,7 +184,7 @@ export async function updateListing(id, listingData) {
 /**
  * Deletes a listing by ID
  * @param {string} id - The ID of the listing to delete
- * @returns {Promise} The API response
+ * @returns {Promise}
  */
 export async function deleteListing(id) {
   const res = await fetch(
@@ -224,24 +224,120 @@ export async function fetchPosts(params = {}) {
     return await response.json();
   } catch (error) {
     console.error("Error fetching posts:", error);
-    throw error; // rethrow so displayPosts can catch
+    throw error;
   }
 }
 
 /**
  * Fetch a single listing by ID
  * @param {string} id - Listing ID
- * @returns {Promise<{ data: Object }>} - The listing data
+ * @returns {Promise<{ data: Object }>}
  */
-export async function getSingleListing(id) {
+export async function getSingleListing(id, options = {}) {
+  const params = new URLSearchParams();
+  params.append("_seller", "true");
+  if (options._bids) params.append("_bids", "true");
+  const query = params.toString() ? `?${params}` : "";
   const url = `${BASE_API_URL}/auction/listings/${encodeURIComponent(
     id
-  )}?_seller=true`;
+  )}${query}`;
   const response = await fetch(url, { headers });
   if (!response.ok) {
-    const errorJson = await response.json().catch(() => ({}));
-    const msg = errorJson.errors?.[0]?.message || response.statusText;
-    throw new Error(`Failed to load listing (${response.status}): ${msg}`);
+    const err = await response.json().catch(() => ({}));
+    throw new Error(
+      `Failed to load listing (${response.status}): ${
+        err.errors?.[0]?.message || response.statusText
+      }`
+    );
   }
   return response.json();
+}
+
+/**
+ * Place a bid on a listing
+ * @param {string} listingId
+ * @param {number} amount
+ * @returns {Promise<{ data: Object }>}
+ */
+export async function placeBid(listingId, amount) {
+  const url = `${BASE_API_URL}/auction/listings/${encodeURIComponent(
+    listingId
+  )}/bids`;
+  const resp = await fetch(url, {
+    method: "POST",
+    headers,
+    body: JSON.stringify({ amount }),
+  });
+  if (!resp.ok) {
+    let msg = resp.statusText;
+    try {
+      const err = await resp.json();
+      msg = err.message || msg;
+    } catch {}
+    throw new Error(`Bid failed: ${msg}`);
+  }
+  const { data } = await resp.json();
+  return data;
+}
+
+/**
+ * Get all bids made by a user
+ * @param {string} profileName
+ * @returns {Promise<{ data: Object }>}
+ */
+export async function getUserBids(profileName) {
+  const url = new URL(
+    `${BASE_API_URL}/auction/profiles/${encodeURIComponent(profileName)}/bids`
+  );
+  url.searchParams.append("_listings", "true");
+
+  const res = await fetch(url.toString(), { headers });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(
+      err.errors?.[0]?.message || `Failed to fetch bids (${res.status})`
+    );
+  }
+  return res.json();
+}
+
+/**
+ * Retrieve all listings a user has won.
+ * @param {string} username
+ * @returns {Promise<{ data: Array }>}
+ */
+export async function getUserWins(username) {
+  const url = `${BASE_API_URL}/auction/profiles/${encodeURIComponent(
+    username
+  )}/wins`;
+  try {
+    const res = await fetch(url, { method: "GET", headers });
+    if (!res.ok) {
+      throw new Error(`Failed to fetch wins (${res.status})`);
+    }
+    return await res.json();
+  } catch (err) {
+    console.error("Error fetching user wins:", err);
+    throw err;
+  }
+}
+
+/**
+ * Search listings by title or description.
+ * @param {string} q
+ * @returns {Promise<{ data: Listing[] }>}
+ */
+export function searchListings(q) {
+  return fetch(
+    `${BASE_API_URL}/auction/listings/search?q=${encodeURIComponent(q)}`,
+    { headers }
+  )
+    .then((res) => {
+      if (!res.ok) throw new Error(`Search failed: ${res.status}`);
+      return res.json();
+    })
+    .then((json) => {
+      const listings = Array.isArray(json) ? json : json.data || [];
+      return { data: listings };
+    });
 }
