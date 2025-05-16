@@ -36,63 +36,12 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 /**
- * Fetches user wins and renders them in the wins grid
- */
-async function loadUserWins(username) {
-  const container = document.getElementById("wins-grid");
-  if (!container) return;
-  showSkeletonLoader(container, 3);
-
-  try {
-    const { data: wins } = await getUserWins(username);
-    container.innerHTML = "";
-
-    if (wins.length === 0) {
-      showMessage(container, "No wins yet.");
-      return;
-    }
-
-    const wrapper = document.createElement("div");
-    wrapper.className = "max-w-xs w-full";
-
-    const toggle = document.createElement("button");
-    toggle.textContent = `Wins (${wins.length}) ▼`;
-    toggle.className =
-      "w-full text-sm px-3 py-2 bg-green-600 text-white rounded hover:bg-green-700";
-    wrapper.appendChild(toggle);
-
-    const list = document.createElement("ul");
-    list.className =
-      "hidden mt-1 border divide-y rounded shadow bg-white max-h-40 overflow-y-auto text-sm";
-    wins.forEach((win) => {
-      const li = document.createElement("li");
-      li.className = "flex justify-between px-3 py-2";
-      const link = document.createElement("a");
-      link.textContent = win.title;
-      link.href = `/post/listing.html?id=${encodeURIComponent(win.id)}`;
-      link.className = "flex-1 text-blue-600 hover:underline truncate";
-      const when = document.createElement("span");
-      when.textContent = `Won ${new Date(win.endsAt).toLocaleDateString()}`;
-      when.className = "ml-2 text-gray-700";
-      li.append(link, when);
-      list.appendChild(li);
-    });
-    wrapper.appendChild(list);
-    container.appendChild(wrapper);
-
-    toggle.addEventListener("click", () => list.classList.toggle("hidden"));
-  } catch (err) {
-    console.error("Could not load user wins:", err);
-    showMessage(container, "Error loading wins.", true);
-  }
-}
-
-/**
- * Fetches all bids by this user and renders them in the same card style as posts
+ * Fetches all bids by this user and renders them in a card grid.
  */
 async function loadUserBids(username) {
   const container = document.getElementById("bids-grid");
   if (!container) return;
+  container.innerHTML = "";
   showSkeletonLoader(container, 3);
 
   try {
@@ -104,38 +53,99 @@ async function loadUserBids(username) {
       return;
     }
 
-    const wrapper = document.createElement("div");
-    wrapper.className = "max-w-xs w-full";
+    const grid = document.createElement("div");
+    grid.className = "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6";
 
-    const toggle = document.createElement("button");
-    toggle.textContent = `Bids (${bids.length}) ▼`;
-    toggle.className =
-      "w-full text-sm px-3 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700";
-    wrapper.appendChild(toggle);
-
-    const list = document.createElement("ul");
-    list.className =
-      "hidden mt-1 border divide-y rounded shadow bg-white max-h-40 overflow-y-auto text-sm";
     bids.forEach((bid) => {
-      const li = document.createElement("li");
-      li.className = "flex justify-between px-3 py-2";
-      const link = document.createElement("a");
-      link.textContent = bid.listing.title;
-      link.href = `/post/listing.html?id=${encodeURIComponent(bid.listing.id)}`;
-      link.className = "flex-1 text-blue-600 hover:underline truncate";
-      const price = document.createElement("span");
-      price.textContent = `${Number(bid.amount).toFixed(2)} Coins`;
-      price.className = "ml-2 text-gray-700";
-      li.append(link, price);
-      list.appendChild(li);
-    });
-    wrapper.appendChild(list);
-    container.appendChild(wrapper);
+      const card = document.createElement("div");
+      card.className =
+        "bg-white rounded-lg shadow overflow-hidden flex flex-col";
 
-    toggle.addEventListener("click", () => list.classList.toggle("hidden"));
+      const body = document.createElement("div");
+      body.className = "p-4 flex-1 flex flex-col";
+      const title = document.createElement("h3");
+      title.textContent = bid.listing.title;
+      title.className = "font-semibold text-lg mb-2 truncate";
+      body.appendChild(title);
+
+      const amount = document.createElement("p");
+      amount.textContent = `Your bid: ${Number(
+        bid.amount
+      ).toLocaleString()} 🪙`;
+      amount.className = "text-gray-600 text-sm mb-4";
+      body.appendChild(amount);
+
+      const link = document.createElement("a");
+      link.href = `/post/listing.html?id=${encodeURIComponent(bid.listing.id)}`;
+      link.className =
+        "mt-auto inline-block bg-indigo-600 text-white px-3 py-2 rounded hover:bg-indigo-700 text-center";
+      link.textContent = "View Listing";
+      body.appendChild(link);
+
+      card.appendChild(body);
+      grid.appendChild(card);
+    });
+
+    container.appendChild(grid);
   } catch (err) {
     console.error("Could not load user bids:", err);
     showMessage(container, "Error loading bids.", true);
+  }
+}
+
+/**
+ * Fetches all listings a user has won and renders them in a card grid.
+ */
+async function loadUserWins(username) {
+  const container = document.getElementById("wins-grid");
+  if (!container) return;
+  container.innerHTML = "";
+  showSkeletonLoader(container, 3);
+
+  try {
+    const { data: wins } = await getUserWins(username);
+    container.innerHTML = "";
+
+    if (wins.length === 0) {
+      showMessage(container, "No wins yet.");
+      return;
+    }
+
+    const grid = document.createElement("div");
+    grid.className = "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6";
+
+    wins.forEach((win) => {
+      const card = document.createElement("div");
+      card.className =
+        "bg-white rounded-lg shadow overflow-hidden flex flex-col";
+
+      const body = document.createElement("div");
+      body.className = "p-4 flex-1 flex flex-col";
+      const title = document.createElement("h3");
+      title.textContent = win.title;
+      title.className = "font-semibold text-lg mb-2 truncate";
+      body.appendChild(title);
+
+      const date = document.createElement("p");
+      date.textContent = `Won on: ${new Date(win.endsAt).toLocaleDateString()}`;
+      date.className = "text-gray-600 text-sm mb-4";
+      body.appendChild(date);
+
+      const link = document.createElement("a");
+      link.href = `/post/listing.html?id=${encodeURIComponent(win.id)}`;
+      link.className =
+        "mt-auto inline-block bg-green-600 text-white px-3 py-2 rounded hover:bg-green-700 text-center";
+      link.textContent = "View Listing";
+      body.appendChild(link);
+
+      card.appendChild(body);
+      grid.appendChild(card);
+    });
+
+    container.appendChild(grid);
+  } catch (err) {
+    console.error("Could not load user wins:", err);
+    showMessage(container, "Error loading wins.", true);
   }
 }
 
@@ -182,87 +192,83 @@ async function loadProfile(username) {
  */
 async function loadUserPosts(username) {
   const grid = document.getElementById("posts-grid");
+  if (!grid) return;
+
+  // Show skeletons, then switch to a 2-column layout on md+ screens
   showSkeletonLoader(grid, 3);
+  grid.className = "grid grid-cols-1 md:grid-cols-2 gap-8";
+
   try {
     const { data: posts } = await getUserPosts(username);
-    const grid = document.getElementById("posts-grid");
     grid.innerHTML = "";
 
     if (posts.length === 0) {
-      showMessage(grid, "No posts yet.");
+      showMessage(grid, "No listings yet.");
       return;
     }
 
     posts.forEach((post) => {
-      const card = document.createElement("div");
-      card.className = "bg-white rounded-lg shadow p-4 flex flex-col h-full";
-
-      const mediaItem = post.media?.[0];
-      if (mediaItem) {
-        const img = document.createElement("img");
-        img.src = mediaItem.url;
-        img.alt = mediaItem.alt || post.title;
-        img.className = "w-full h-56 object-cover rounded-md mb-3";
-        card.appendChild(img);
-      }
-
-      const title = document.createElement("h3");
-      title.textContent = post.title;
-      title.className = "font-semibold text-lg mb-2";
-      card.appendChild(title);
-
-      const desc = document.createElement("p");
-      desc.textContent = post.description || "";
-      desc.className = "text-gray-700 text-sm flex-grow";
-      card.appendChild(desc);
-
-      const fullText = post.description || "";
-      const maxLen = 100;
-      if (fullText.length > maxLen) {
-        const shortText = fullText.slice(0, maxLen) + "... ";
-        desc.textContent = shortText;
-
-        const moreText = document.createElement("span");
-        moreText.textContent = "Read more";
-        moreText.className = "text-blue-500 underline text-sm cursor-pointer";
-        moreText.addEventListener("click", () => {
-          if (moreText.textContent === "Read more") {
-            desc.textContent = fullText + " ";
-            moreText.textContent = "Show less";
-          } else {
-            desc.textContent = shortText;
-            moreText.textContent = "Read more";
-          }
-          desc.appendChild(moreText);
-        });
-        desc.appendChild(moreText);
-      } else {
-        desc.textContent = fullText;
-      }
-      card.appendChild(desc);
-
-      const tagsDiv = document.createElement("div");
-      tagsDiv.className = "flex flex-wrap mt-2";
-      (post.tags || []).forEach((tag) => {
-        const span = document.createElement("span");
-        span.textContent = tag;
-        span.className =
-          "px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs mr-2 mb-2";
-        tagsDiv.appendChild(span);
-      });
-      card.appendChild(tagsDiv);
-
-      const endsAt = document.createElement("p");
-      const endDate = new Date(post.endsAt);
-      endsAt.textContent = `Ends in: ${formatTimeRemaining(endDate)}`;
-      endsAt.title = `Ends at ${endDate.toLocaleString()}`;
-      endsAt.className = "text-gray-500 text-xs mt-2";
-      card.appendChild(endsAt);
-
+      // 1) The outer link
       const link = document.createElement("a");
       link.href = `/post/listing.html?id=${encodeURIComponent(post.id)}`;
-      link.appendChild(card);
+      link.className = "block";
 
+      // 2) The card container
+      const card = document.createElement("div");
+      card.className =
+        "bg-white rounded-lg shadow-lg p-6 flex space-x-6 " +
+        "items-start hover:shadow-2xl transition duration-200";
+
+      // 3) Thumbnail (fixed size)
+      const img = document.createElement("img");
+      if (post.media?.[0]) {
+        img.src = post.media[0].url;
+        img.alt = post.media[0].alt || post.title;
+      }
+      img.className =
+        "w-40 h-40 object-cover rounded-md flex-shrink-0 bg-gray-100";
+      card.appendChild(img);
+
+      // 4) Details column
+      const details = document.createElement("div");
+      details.className = "flex-1 flex flex-col";
+
+      // Title
+      const title = document.createElement("h3");
+      title.textContent = post.title;
+      title.className = "font-semibold text-xl mb-2";
+      details.appendChild(title);
+
+      // Short description
+      const desc = document.createElement("p");
+      desc.className = "text-gray-700 text-sm flex-grow mb-3";
+      const fullText = post.description || "";
+      const shortText =
+        fullText.length > 120 ? fullText.slice(0, 120) + "…" : fullText;
+      desc.textContent = shortText;
+      details.appendChild(desc);
+
+      // Meta row
+      const meta = document.createElement("div");
+      meta.className = "flex items-center text-gray-500 text-sm space-x-4";
+
+      const time = document.createElement("span");
+      time.innerHTML = `<i class="far fa-clock mr-1"></i>${formatTimeRemaining(
+        new Date(post.endsAt)
+      )}`;
+      time.title = `Ends at ${new Date(post.endsAt).toLocaleString()}`;
+      meta.appendChild(time);
+
+      const bids = document.createElement("span");
+      bids.innerHTML = `${post._count.bids || 0} bid${
+        post._count.bids === 1 ? "" : "s"
+      }`;
+      meta.appendChild(bids);
+
+      details.appendChild(meta);
+
+      card.appendChild(details);
+      link.appendChild(card);
       grid.appendChild(link);
     });
   } catch (err) {
