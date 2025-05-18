@@ -28,6 +28,13 @@ Noroff semester project year 2, an auction platform built with **HTML**, **Tailw
    ```bash
    npm install
    ```
+   
+3. **Run app**
+
+   ```bash
+   npm run build
+   ```
+
 
 ---
 
