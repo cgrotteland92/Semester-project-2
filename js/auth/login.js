@@ -23,12 +23,10 @@ loginForm.addEventListener("submit", async (event) => {
 
     if (userData) {
       alert("Login successful!");
-      console.log("User logged in:", userData);
 
       localStorage.setItem("authToken", userData.accessToken);
       localStorage.setItem("loggedInUser", JSON.stringify(userData));
 
-      console.log("Redirecting to index...");
       window.location.href = "/index.html";
     }
   } catch (error) {

@@ -1,55 +1,87 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <meta
+      name="description"
+      content="Log in to SnapShop - access your bids, watchlist, and seller dashboard quickly and securely."
+    />
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="../css/output.css" />
+    <link rel="icon" href="/assets/icons/favicon.ico" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cardo:ital,wght@0,400;0,700;1,400&display=swap"
+      rel="stylesheet"
+    />
     <script
       src="https://kit.fontawesome.com/ff0f99a23c.js"
       crossorigin="anonymous"
     ></script>
-    <title>Login | Auction House</title>
+    <title>Login | SNAPShop</title>
   </head>
-  <body>
+  <body class="bg-primary min-h-screen grid grid-rows-[auto_1fr_auto]">
     <header>
-      <nav class="flex justify-between items-center bg-secondary p-4 relative">
+      <nav
+        class="relative bg-secondary p-4 flex justify-between items-center shadow-lg"
+      >
         <div class="logo">
-          <a href="/" class="text-[#DA7756] text-xl no-underline"
-            >Auction House</a
+          <a
+            href="/"
+            class="text-[#DA7756] uppercase tracking-wide inline-block transform transition-transform duration-300 hover:scale-105"
           >
+            <span class="font-black text-3xl">Snap</span
+            ><span class="font-extrabold text-2xl">Shop</span>
+          </a>
         </div>
-        <input type="checkbox" id="menu-toggle" class="hidden" />
-        <label
-          for="menu-toggle"
-          class="cursor-pointer text-headers text-2xl md:hidden"
+        <button
+          id="burger-menu-btn"
+          class="md:hidden z-30 text-headers text-2xl"
+          aria-label="Toggle menu"
         >
           <i class="fas fa-bars"></i>
-        </label>
+        </button>
         <ul
           id="nav-menu"
-          class="list-none flex-col absolute top-full left-0 w-full bg-secondary p-4 hidden md:flex md:flex-row md:static md:w-auto md:p-0"
+          class="list-none absolute top-full left-0 w-full bg-secondary p-4 hidden flex-col z-20 md:flex md:flex-row md:static md:w-auto md:p-0"
         >
           <li>
             <a
-              href="/index.html"
+              href="/"
               class="text-headers text-base no-underline block p-2 transition-colors duration-300 ease-in-out hover:text-gray-500"
               >Home</a
             >
           </li>
           <li>
             <a
-              href="/account/profile.html"
+              href="/post/allPosts.html"
               class="text-headers text-base no-underline block p-2 transition-colors duration-300 ease-in-out hover:text-gray-500"
-              >Profile</a
+              >Listings</a
             >
           </li>
-          <li id="user-info" class="text-headers block p-2"></li>
+          <li id="nav-user-credits-display" class="text-headers p-2 hidden">
+            <a
+              id="nav-profile-link"
+              href="/account/profile.html"
+              class="text-headers text-base no-underline transition-colors duration-300 ease-in-out hover:text-gray-500 mr-2"
+            >
+              <span id="nav-user-name"></span>
+            </a>
+            <span id="nav-user-credits" class="text-[#DA7756]"></span>
+          </li>
+          <li id="nav-login-container">
+            <a
+              href="/account/login.html"
+              id="nav-login-logout"
+              class="text-headers text-base no-underline block p-2 transition-colors duration-300 ease-in-out hover:text-gray-500"
+              >Log In</a
+            >
+          </li>
         </ul>
       </nav>
     </header>
     <main
       id="login-main"
-      class="flex flex-col items-center justify-center min-h-screen p-5 bg-primary text-headers"
+      class="flex flex-col items-center justify-center min-h-screen p-5"
     >
       <h1 class="text-[2rem] mb-2.5 text-center">Welcome back!</h1>
       <h2 class="text-[1.2rem] mb-5 text-gray-600 text-center">
@@ -100,7 +132,7 @@
       </form>
     </main>
     <footer class="bg-secondary text-headers text-center p-4 relative w-full">
-      <p>&copy; 2025 Auction House. All Rights Reserved.</p>
+      <p>&copy; 2025 SNAPShop. All Rights Reserved.</p>
     </footer>
   </body>
   <script type="module" src="../js/nav.js"></script>

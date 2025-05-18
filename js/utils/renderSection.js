@@ -17,12 +17,16 @@ export function renderSection(posts, container, emptyMessage) {
     const card = document.createElement("div");
     card.className = "bg-white rounded-lg shadow p-4 flex flex-col h-full";
 
+    const PLACEHOLDER_URL =
+      "https://images.unsplash.com/vector-1740757708403-59ee52690631?q=80&w=2360&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
+    const PLACEHOLDER_ALT = "No image available";
+
     const mediaItem = post.media?.[0];
     if (mediaItem) {
       const img = document.createElement("img");
-      img.src = mediaItem.url;
-      img.alt = mediaItem.alt || post.title;
-      img.className = "w-full h-60 object-cover rounded-md mb-3";
+      img.src = mediaItem.url || PLACEHOLDER_URL;
+      img.alt = mediaItem.alt || PLACEHOLDER_ALT;
+      img.className = "w-full h-64 object-cover rounded-md mb-3";
       card.appendChild(img);
     }
 

@@ -1,21 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <meta
+      name="description"
+      content="SnapShop Auction - {{title}} by {{sellerName}}. View description, current bids, and place your offer before the timer runs out!"
+    />
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="../css/output.css" />
+    <link rel="icon" href="/assets/icons/favicon.ico" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cardo:ital,wght@0,400;0,700;1,400&display=swap"
+      rel="stylesheet"
+    />
     <script
       src="https://kit.fontawesome.com/ff0f99a23c.js"
       crossorigin="anonymous"
     ></script>
-    <title>Post | Auction House</title>
+    <title>Post | SNAPShop</title>
   </head>
   <body class="bg-primary">
     <header>
-      <nav class="relative bg-secondary p-4 flex justify-between items-center">
+      <nav
+        class="relative bg-secondary p-4 flex justify-between items-center shadow-lg"
+      >
         <div class="logo">
-          <a href="index.html" class="text-[#DA7756] text-xl no-underline">
-            Auction House
+          <a
+            href="/"
+            class="text-[#DA7756] uppercase tracking-wide inline-block transform transition-transform duration-300 hover:scale-105"
+          >
+            <span class="font-black text-3xl">Snap</span
+            ><span class="font-extrabold text-2xl">Shop</span>
           </a>
         </div>
         <button
@@ -128,7 +143,7 @@
             <div id="listing-actions" class="hidden flex space-x-2">
               <button
                 id="btnToggleEditListing"
-                class="flex items-center px-4 py-2 bg-[#DA7756] hover:bg-[#da7756ab] text-white rounded-full"
+                class="flex items-center px-4 py-2 bg-white rounded-md shadow text-headers hover:bg-gray-100"
               >
                 <i class="fas fa-edit mr-1"></i>Edit
               </button>
@@ -170,7 +185,7 @@
 
         <section
           id="editPostContainer"
-          class="hidden bg-gray-50 p-8 flex flex-col items-center"
+          class="hidden bg-secondary p-8 flex flex-col items-center rounded-3xl"
         >
           <h2 class="text-2xl text-center font-semibold mb-6">
             Edit Your Listing
@@ -182,7 +197,7 @@
             <div class="space-y-2">
               <label
                 for="editTitle"
-                class="block text-sm font-medium text-gray-700"
+                class="block text-sm font-medium text-headers"
                 >Title</label
               >
               <input
@@ -190,21 +205,21 @@
                 id="editTitle"
                 name="title"
                 required
-                class="mt-1 block w-full p-2 border rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                class="mt-1 block w-full p-2 border rounded-md focus:ring-black"
               />
             </div>
 
             <div class="space-y-2">
               <label
                 for="editDescription"
-                class="block text-sm font-medium text-gray-700"
+                class="block text-sm font-medium text-headers"
                 >Description</label
               >
               <textarea
                 id="editDescription"
                 name="description"
                 rows="4"
-                class="mt-1 block w-full p-2 border rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                class="mt-1 block w-full p-2 border rounded-md focus:ring-black"
               ></textarea>
             </div>
 
@@ -212,21 +227,21 @@
               <div class="space-y-2">
                 <label
                   for="editTags"
-                  class="block text-sm font-medium text-gray-700"
+                  class="block text-sm font-medium text-headers"
                   >Tags</label
                 >
                 <input
                   type="text"
                   id="editTags"
                   name="tags"
-                  class="mt-1 block w-full p-2 border rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                  class="mt-1 block w-full p-2 border rounded-md focus:ring-black"
                 />
               </div>
 
               <div class="space-y-2">
                 <label
                   for="editEndsAt"
-                  class="block text-sm font-medium text-gray-700"
+                  class="block text-sm font-medium text-headers"
                   >Ends At</label
                 >
                 <input
@@ -234,7 +249,7 @@
                   id="editEndsAt"
                   name="endsAt"
                   required
-                  class="mt-1 block w-full p-2 border rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                  class="mt-1 block w-full p-2 border rounded-md focus:ring-black"
                 />
               </div>
             </div>
@@ -243,28 +258,28 @@
               <div class="space-y-2">
                 <label
                   for="editMediaUrl"
-                  class="block text-sm font-medium text-gray-700"
+                  class="block text-sm font-medium text-headers"
                   >Media URL</label
                 >
                 <input
                   type="url"
                   id="editMediaUrl"
                   name="mediaUrl"
-                  class="mt-1 block w-full p-2 border rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                  class="mt-1 block w-full p-2 border rounded-md focus:ring-black"
                 />
               </div>
 
               <div class="space-y-2">
                 <label
                   for="editMediaAlt"
-                  class="block text-sm font-medium text-gray-700"
+                  class="block text-sm font-medium text-headers"
                   >Media Alt Text</label
                 >
                 <input
                   type="text"
                   id="editMediaAlt"
                   name="mediaAlt"
-                  class="mt-1 block w-full p-2 border rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                  class="mt-1 block w-full p-2 border rounded-md focus:ring-black"
                 />
               </div>
             </div>
@@ -272,13 +287,13 @@
             <button
               type="submit"
               id="btnSubmitEdit"
-              class="w-full flex justify-center px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-shadow shadow-md"
+              class="w-full flex justify-center px-6 py-3 bg-[#DA7756] hover:bg-[#da7756ab] text-white rounded-lg transition-shadow"
             >
               <p>Save Changes</p>
             </button>
             <button
               id="btnDeleteListing"
-              class="w-full flex justify-center px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-shadow shadow-md"
+              class="w-full flex justify-center px-6 py-3 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 transition-shadow"
             >
               <p>Delete</p>
             </button>
@@ -287,8 +302,8 @@
       </div>
     </main>
 
-    <footer class="bg-secondary text-white text-center p-4">
-      <p>&copy; 2025 Auction House. All Rights Reserved.</p>
+    <footer class="bg-secondary text-headers text-center p-4">
+      <p>&copy; 2025 SNAPShop. All Rights Reserved.</p>
     </footer>
 
     <script type="module" src="../js/nav.js" defer></script>

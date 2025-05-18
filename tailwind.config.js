@@ -1,4 +1,4 @@
-const { headers } = require("./js/api");
+const defaultTheme = require("tailwindcss/defaultTheme");
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
@@ -6,9 +6,13 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        primary: "#EEECE2",
-        secondary: "#F5F4ED",
+        primary: "#FAF9F5",
+        secondary: "#E8E6DC",
         headers: "#3d3929",
+      },
+      fontFamily: {
+        sans: ["Cardo", ...defaultTheme.fontFamily.sans],
+        syne: ["Cardo", "sans-serif"],
       },
     },
   },
