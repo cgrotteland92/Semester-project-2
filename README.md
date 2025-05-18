@@ -1,7 +1,7 @@
 # SnapShop Auction House
 
-![Project Screenshot](assets/images/screenshot1.png)
-![Project Screenshot](assets/images/screenshot2.png)
+![Project Screenshot 1](assets/images/screenshot1.png)
+![Project Screenshot 2](assets/images/screenshot2.png)
 
 Noroff semester project year 2, an auction platform built with **HTML**, **Tailwind CSS**, and **Vanilla JavaScript**.
 
