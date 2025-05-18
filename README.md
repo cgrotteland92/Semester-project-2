@@ -11,7 +11,7 @@ Noroff semester project year 2, an auction platform built with **HTML**, **Tailw
 - Create, edit, and delete auction listings with images
 - Place bids and view bid history with live updates
 - Responsive design for mobile and desktop
-
+- Masonry image gallery on Home page
 ---
 
 ## Installation
