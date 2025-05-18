@@ -2,6 +2,7 @@
 
 ![Project Screenshot](assets/images/screenshot1.png)
 
+
 Noroff semester project year 2, an auction platform built with **HTML**, **Tailwind CSS**, and **Vanilla JavaScript**.
 
 ## Features
@@ -10,7 +11,7 @@ Noroff semester project year 2, an auction platform built with **HTML**, **Tailw
 - Create, edit, and delete auction listings with images
 - Place bids and view bid history with live updates
 - Responsive design for mobile and desktop
-
+- Masonry image gallery on Home page
 ---
 
 ## Installation
@@ -27,6 +28,13 @@ Noroff semester project year 2, an auction platform built with **HTML**, **Tailw
    ```bash
    npm install
    ```
+   
+3. **Run app**
+
+   ```bash
+   npm run build
+   ```
+
 
 ---
 
