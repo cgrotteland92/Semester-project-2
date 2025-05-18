@@ -19,7 +19,7 @@ Noroff semester project year 2, an auction platform built with **HTML**, **Tailw
 
    ```bash
    git clone https://github.com/cgrotteland92/Semester-project-2.git
-   cd snapshop
+   cd Semester-project-2
    ```
 
 2. **Install dependencies**
