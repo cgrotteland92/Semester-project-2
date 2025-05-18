@@ -1,63 +1,78 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <meta
+      name="description"
+      content="SnapShop Listings - Browse our live auctions. Find great deals on furniture, textbooks, electronics and more. Bid fast and win big!"
+    />
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="../css/output.css" />
+    <link rel="icon" href="/assets/icons/favicon.ico" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cardo:ital,wght@0,400;0,700;1,400&display=swap"
+      rel="stylesheet"
+    />
     <script
       src="https://kit.fontawesome.com/ff0f99a23c.js"
       crossorigin="anonymous"
     ></script>
-    <title>Post | Auction House</title>
+    <title>Post | SNAPShop</title>
   </head>
-  <body class="bg-gray-100">
+  <body class="bg-primary min-h-screen grid grid-rows-[auto_1fr_auto]">
     <header>
-      <nav class="relative bg-black p-4 flex justify-between items-center">
+      <nav
+        class="relative bg-secondary p-4 flex justify-between items-center shadow-lg"
+      >
         <div class="logo">
-          <a href="/" class="text-white text-xl no-underline">
-            Auction House
+          <a
+            href="/"
+            class="text-[#DA7756] uppercase tracking-wide inline-block transform transition-transform duration-300 hover:scale-105"
+          >
+            <span class="font-black text-3xl">Snap</span
+            ><span class="font-extrabold text-2xl">Shop</span>
           </a>
         </div>
         <button
           id="burger-menu-btn"
-          class="md:hidden z-30 text-white text-2xl"
+          class="md:hidden z-30 text-headers text-2xl"
           aria-label="Toggle menu"
         >
           <i class="fas fa-bars"></i>
         </button>
         <ul
           id="nav-menu"
-          class="list-none absolute top-full left-0 w-full bg-black p-4 hidden flex-col z-20 md:flex md:flex-row md:static md:w-auto md:p-0"
+          class="list-none absolute top-full left-0 w-full bg-secondary p-4 hidden flex-col z-20 md:flex md:flex-row md:static md:w-auto md:p-0"
         >
           <li>
             <a
               href="/"
-              class="text-white text-base no-underline block p-2 transition-colors duration-300 ease-in-out hover:text-gray-500"
+              class="text-headers text-base no-underline block p-2 transition-colors duration-300 ease-in-out hover:text-gray-500"
               >Home</a
             >
           </li>
           <li>
             <a
               href="/post/allPosts.html"
-              class="text-white text-base no-underline block p-2 transition-colors duration-300 ease-in-out hover:text-gray-500"
+              class="text-headers text-base no-underline block p-2 transition-colors duration-300 ease-in-out hover:text-gray-500"
               >Listings</a
             >
           </li>
-          <li id="nav-user-credits-display" class="text-white p-2 hidden">
+          <li id="nav-user-credits-display" class="text-headers p-2 hidden">
             <a
               id="nav-profile-link"
               href="/account/profile.html"
-              class="text-white text-base no-underline transition-colors duration-300 ease-in-out hover:text-gray-500 mr-2"
+              class="text-headers text-base no-underline transition-colors duration-300 ease-in-out hover:text-gray-500 mr-2"
             >
               <span id="nav-user-name"></span>
             </a>
-            <span id="nav-user-credits" class="text-yellow-400"></span>
+            <span id="nav-user-credits" class="text-[#DA7756]"></span>
           </li>
           <li id="nav-login-container">
             <a
               href="/account/login.html"
               id="nav-login-logout"
-              class="text-white text-base no-underline block p-2 transition-colors duration-300 ease-in-out hover:text-gray-500"
+              class="text-headers text-base no-underline block p-2 transition-colors duration-300 ease-in-out hover:text-gray-500"
               >Log In</a
             >
           </li>
@@ -78,7 +93,7 @@
         </select>
       </div>
       <section>
-        <h1 class="text-2xl font-bold mb-4 text-center">
+        <h1 class="text-headers text-2xl font-bold mb-4 text-center">
           Browse or search for what you are looking for!
         </h1>
         <section id="search-section" class="flex justify-center mb-4">
@@ -86,7 +101,7 @@
             type="text"
             id="search-input"
             placeholder="Search..."
-            class="w-full max-w-md p-3 border rounded-lg focus:ring focus:ring-blue-300"
+            class="w-full max-w-md p-3 border rounded-lg focus:ring focus:ring-black"
           />
         </section>
         <div
@@ -99,11 +114,9 @@
         ></div>
       </section>
     </main>
-
-    <footer class="bg-black text-white text-center p-4">
-      <p>&copy; 2025 Auction House. All Rights Reserved.</p>
+    <footer class="bg-secondary text-headers text-center p-4 relative w-full">
+      <p>&copy; 2025 SNAPShop. All Rights Reserved.</p>
     </footer>
-
     <script type="module" src="../js/nav.js" defer></script>
     <script type="module" src="../js/allPosts.js" defer></script>
   </body>

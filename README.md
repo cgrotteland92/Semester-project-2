@@ -1,94 +1,41 @@
-# Semester-project-2
+# SnapShop Auction House
 
-Auction house website
+![Project Screenshot](assets/images/Screenshot 2025-05-18 164233.png)
+![Project Screenshot](assets/images/Screenshot 2025-05-18 164357.png)
 
-
-ADD META NAME DESCRIPTION TO EVERY PAGE
-=======
-
-# Remember to edit README and add screenshot.
-
-**A Tailwind CSS, Vanilla JavaScript social media application that allows users to register, log in, create/edit/delete posts. This project interacts with Noroff's Social API to handle data operations such as posts, profiles and reactions.**
+Noroff semester project year 2, an auction platform built with **HTML**, **Tailwind CSS**, and **Vanilla JavaScript**.
 
 ## Features
 
-- **User Authentication:**
+- User registration & login
+- Create, edit, and delete auction listings with images
+- Place bids and view bid history with live updates
+- Responsive design for mobile and desktop
 
-  - Register a new user
-  - Log in as an existing user
+---
 
-- **Posts:**
+## Installation
 
-  - Create, edit, and delete posts
-  - View a main feed of posts
-  - Search posts by title or body
+1. **Clone the repo**
 
-- **Profiles:**
-  - View your own and other users’ profiles
-  - Edit your own profile (update name, bio, avatar, banner)
-  - View posts created by a specific user on their profile
+   ```bash
+   git clone https://github.com/cgrotteland92/Semester-project-2.git
+   cd snapshop
+   ```
 
-## API Endpoints Used
+2. **Install dependencies**
 
-### Posts Endpoints
+   ```bash
+   npm install
+   ```
 
-- **Fetch Posts:**  
-  `GET /social/posts?_author=true` – Retrieves all posts with author details.
+---
 
-- **Create Post:**  
-  `POST /social/posts` – Creates a new post.
+## Usage
 
-- **Edit Post:**  
-  `PUT /social/posts/<id>` – Updates a post based on its ID.
-
-- **Delete Post:**  
-  `DELETE /social/posts/<id>` – Deletes a post based on its ID.
-
-- **React to Post:**  
-  `PUT /social/posts/<id>/react/<symbol>` – Toggles a reaction on a post.
-
-- **Search Posts:**  
-  `GET /social/posts/search?q=<query>&_author=true` – Searches posts by title or body.
-
-### Profile Endpoints
-
-- **All Profiles:**  
-  `GET /social/profiles` – Retrieves a list of all profile
-- **Single Profile:**  
-  `GET /social/profiles/<name>` – Retrieves a single profile by name, including additional properties if needed.
-
-- **Update Profile:**  
-  `PUT /social/profiles/<name>` – Updates a profile’s details.
-
-- **User Posts:**  
-  `GET /social/profiles/<name>/posts` – Retrieves posts created by a specific user.
-
-### Authentication Endpoints
-
-- **Register User:**  
-  `POST /auth/register` – Registers a new user.
-
-- **Login User:**  
-  `POST /auth/login` – Logs in a user.
-
-### Installation
-
-- Node.js is required for installing dependencies and building Tailwind CSS.
-
-1. **Clone the Repository**
-
-```bash
-  git clone https://github.com/NoroffFEU/js2-course-assignment-cgrotteland92.git
-  cd js2-course-assignment-cgrotteland92
-```
-
-2. **Install Dependencies**
-
-```bash
-  npm install
-```
-
-```bash
-  npm run dev
-```
-
+- **Home:** `index.html`
+- **Browse Listings:** `allPosts.html`
+- **View Single Listing:** `singlePost.html`
+- **Register:** `register.html`
+- **Log In:** `login.html`
+- **Profile Dashboard:** `profile.html`

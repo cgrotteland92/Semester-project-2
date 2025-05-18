@@ -16,7 +16,6 @@ function renderBidHistory(bids) {
     return;
   }
 
-  console.log("renderBidHistory called with bids:", bids);
   historyContainer.innerHTML = "";
 
   if (!Array.isArray(bids) || bids.length === 0) {
@@ -48,7 +47,7 @@ function renderBidHistory(bids) {
 
     const amountSpan = document.createElement("span");
     amountSpan.textContent = `${Number(bid.amount)} 🪙`;
-    amountSpan.className = "text-indigo-600 font-semibold";
+    amountSpan.className = "text-headers font-semibold";
 
     item.append(bidderLink, amountSpan);
     historyContainer.appendChild(item);
@@ -77,8 +76,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   try {
     const { data } = await getSingleListing(id, { _seller: true, _bids: true });
-    console.log("Listing data:", data);
-    console.log("Bid array:", data.bids);
+
     skeleton.classList.add("hidden");
     container.classList.remove("hidden");
 
@@ -111,8 +109,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     (data.tags || []).forEach((tag) => {
       const span = document.createElement("span");
       span.textContent = tag;
-      span.className =
-        "px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs";
+      span.className = "px-2 py-1 bg-[#DA7756] text-white rounded-full text-xs";
       tagsDiv.appendChild(span);
     });
     document.getElementById("listing-created").textContent = new Date(
@@ -132,8 +129,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     container.classList.remove("hidden");
 
     const currentUser = getLoggedInUser();
-    console.log("Current user object:", currentUser);
-    console.log("Seller info:", data.seller);
 
     let currentUsername = null;
     if (currentUser) {
@@ -158,10 +153,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         sellerName = data.seller.email;
       }
     }
-
-    console.log(
-      `Comparing: Current user "${currentUsername}" with seller "${sellerName}"`
-    );
 
     const placeBidBtn = document.getElementById("placeBidBtn");
     const bidSection = document.getElementById("bid-section");
@@ -220,8 +211,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     if (currentUsername && sellerName && currentUsername === sellerName) {
-      console.log("✅ User is the seller - showing edit controls");
-
       actionsBar.classList.remove("hidden");
       actionsBar.classList.add("flex");
 
@@ -229,15 +218,12 @@ document.addEventListener("DOMContentLoaded", async () => {
       deleteBtn.style.display = "inline-block";
 
       toggleBtn.addEventListener("click", () => {
-        console.log("Toggle button clicked");
         if (editSection.classList.contains("hidden")) {
           editSection.classList.remove("hidden");
           editSection.classList.add("flex");
-          console.log("Edit section shown");
         } else {
           editSection.classList.add("hidden");
           editSection.classList.remove("flex");
-          console.log("Edit section hidden");
         }
 
         document.getElementById("editPostId").value = data.id;
@@ -255,7 +241,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       form.addEventListener("submit", async (e) => {
         e.preventDefault();
         msg.classList.add("hidden");
-        console.log("Form submitted");
 
         const payload = {};
         const newTitle = document.getElementById("editTitle").value.trim();
@@ -288,8 +273,6 @@ document.addEventListener("DOMContentLoaded", async () => {
           ];
         }
 
-        console.log("Update payload:", payload);
-
         if (!Object.keys(payload).length) {
           showMessage(msg, "No changes detected.", true);
           return;
@@ -297,7 +280,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         try {
           const result = await updateListing(data.id, payload);
-          console.log("Update result:", result);
           msg.textContent = "Listing updated!";
           msg.className = "mb-4 text-green-600";
           msg.classList.remove("hidden");
@@ -321,7 +303,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
       });
     } else {
-      console.log("❌ User is not the seller of this listing");
+      showMessage(msg, "❌ User is not the seller of this listing", true);
     }
   } catch (err) {
     console.error("Error fetching listing:", err);

@@ -1,125 +1,151 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <meta
+      name="description"
+      content="Your SnapShop Profile - view your active bids, won auctions, and items you're selling. Manage your account settings all in one place."
+    />
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="../css/output.css" />
+    <link rel="icon" href="/assets/icons/favicon.ico" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cardo:ital,wght@0,400;0,700;1,400&display=swap"
+      rel="stylesheet"
+    />
     <script
       src="https://kit.fontawesome.com/ff0f99a23c.js"
       crossorigin="anonymous"
     ></script>
-    <title>Profile | Auction House</title>
+    <title>Profile | SNAPShop</title>
   </head>
-  <body>
+  <body class="bg-primary min-h-screen grid grid-rows-[auto_1fr_auto]">
     <header>
-      <nav class="relative bg-black p-4 flex justify-between items-center">
+      <nav
+        class="relative bg-secondary p-4 flex justify-between items-center shadow-lg"
+      >
         <div class="logo">
-          <a href="/" class="text-white text-xl no-underline">
-            Auction House
+          <a
+            href="/"
+            class="text-[#DA7756] uppercase tracking-wide inline-block transform transition-transform duration-300 hover:scale-105"
+          >
+            <span class="font-black text-3xl">Snap</span
+            ><span class="font-extrabold text-2xl">Shop</span>
           </a>
         </div>
         <button
           id="burger-menu-btn"
-          class="md:hidden z-30 text-white text-2xl"
+          class="md:hidden z-30 text-headers text-2xl"
           aria-label="Toggle menu"
         >
           <i class="fas fa-bars"></i>
         </button>
         <ul
           id="nav-menu"
-          class="list-none absolute top-full left-0 w-full bg-black p-4 hidden flex-col z-20 md:flex md:flex-row md:static md:w-auto md:p-0"
+          class="list-none absolute top-full left-0 w-full bg-secondary p-4 hidden flex-col z-20 md:flex md:flex-row md:static md:w-auto md:p-0"
         >
           <li>
             <a
               href="/"
-              class="text-white text-base no-underline block p-2 transition-colors duration-300 ease-in-out hover:text-gray-500"
+              class="text-headers text-base no-underline block p-2 transition-colors duration-300 ease-in-out hover:text-gray-500"
               >Home</a
             >
           </li>
           <li>
             <a
               href="/post/allPosts.html"
-              class="text-white text-base no-underline block p-2 transition-colors duration-300 ease-in-out hover:text-gray-500"
+              class="text-headers text-base no-underline block p-2 transition-colors duration-300 ease-in-out hover:text-gray-500"
               >Listings</a
             >
           </li>
-          <li id="nav-user-credits-display" class="text-white p-2 hidden">
+          <li id="nav-user-credits-display" class="text-headers p-2 hidden">
             <a
               id="nav-profile-link"
               href="/account/profile.html"
-              class="text-white text-base no-underline transition-colors duration-300 ease-in-out hover:text-gray-500 mr-2"
+              class="text-headers text-base no-underline transition-colors duration-300 ease-in-out hover:text-gray-500 mr-2"
             >
               <span id="nav-user-name"></span>
             </a>
-            <span id="nav-user-credits" class="text-yellow-400"></span>
+            <span id="nav-user-credits" class="text-[#DA7756]"></span>
           </li>
           <li id="nav-login-container">
             <a
               href="/account/login.html"
               id="nav-login-logout"
-              class="text-white text-base no-underline block p-2 transition-colors duration-300 ease-in-out hover:text-gray-500"
+              class="text-headers text-base no-underline block p-2 transition-colors duration-300 ease-in-out hover:text-gray-500"
               >Log In</a
             >
           </li>
         </ul>
       </nav>
     </header>
-    <main id="profile-main" class="max-w-[1200px] w-[95%] mx-auto mt-20 p-0">
+    <main id="profile-main" class="max-w-[1200px] w-[95%] mx-auto mt-8 p-0">
       <section
         id="profile-header"
-        class="rounded-[12px] overflow-hidden mb-8 relative pb-8"
+        class="rounded-lg overflow-hidden mb-8 bg-white shadow-md"
       >
-        <img
-          id="profile-banner"
-          alt="Banner"
-          class="w-full h-[340px] object-cover block bg-gray-200"
-        />
-        <img
-          id="profile-avatar"
-          alt="Avatar"
-          class="absolute left-8 top-[230px] w-[120px] h-[120px] rounded-full border-4 border-white object-cover bg-white"
-        />
-        <h1 id="profile-name" class="font-bold text-2xl mt-20 mx-8 mb-2">
-          Loading…
-        </h1>
-        <p id="profile-email" class="text-gray-600 mx-8 mb-2"></p>
-        <p id="profile-bio" class="mx-8 text-gray-700"></p>
-        <div
-          id="profile-counts"
-          class="mt-4 flex space-x-6 mx-8 text-center text-gray-800"
-        >
-          <div>
-            <p id="count-listings" class="text-xl font-semibold">0</p>
-            <p class="text-gray-600">Listings</p>
+        <div class="relative">
+          <img
+            id="profile-banner"
+            alt="Banner"
+            class="w-full h-[350px] object-cover block bg-gray-200"
+          />
+          <img
+            id="profile-avatar"
+            alt="Avatar"
+            class="absolute left-8 -bottom-16 w-[120px] h-[120px] rounded-full border-4 border-primary object-cover bg-primary"
+          />
+          <button
+            id="edit-profile-button"
+            class="absolute top-4 right-4 bg-white px-4 py-2 rounded-md shadow text-headers hover:bg-gray-100"
+          >
+            <i class="fas fa-pencil-alt mr-2"></i>Edit Profile
+          </button>
+        </div>
+
+        <div class="mt-20 px-8 pb-6">
+          <div class="flex flex-wrap justify-between items-center">
+            <div>
+              <h3 id="profile-name" class="font-bold text-2xl mb-1">
+                Loading…
+              </h3>
+              <p id="profile-email" class="text-headers text-sm mb-2"></p>
+            </div>
           </div>
-          <div>
-            <p id="count-wins" class="text-xl font-semibold">0</p>
-            <p class="text-gray-600">Wins</p>
-          </div>
-          <div>
-            <p id="count-credits" class="text-xl font-semibold">0</p>
-            <p class="text-gray-600">Credits</p>
+          <p id="profile-bio" class="mt-4 text-gray-700"></p>
+
+          <div class="mt-6 flex space-x-6 text-center">
+            <div class="bg-secondary px-4 py-2 rounded-lg">
+              <p id="count-listings" class="text-xl font-semibold">0</p>
+              <p class="text-headers text-sm">Listings</p>
+            </div>
+            <div class="bg-secondary px-4 py-2 rounded-lg">
+              <p id="count-wins" class="text-xl font-semibold">0</p>
+              <p class="text-headers text-sm">Wins</p>
+            </div>
+            <div class="bg-secondary px-4 py-2 rounded-lg">
+              <p id="count-credits" class="text-xl font-semibold">0</p>
+              <p class="text-headers text-sm">Credits</p>
+            </div>
           </div>
         </div>
       </section>
-      <div id="edit-profile" class="mt-8">
+      <div id="edit-profile" class="mb-8">
         <form
           id="edit-profile-form"
           class="bg-white p-6 rounded-lg shadow-md"
           style="display: none"
         >
           <h3 class="text-xl font-semibold mb-4">Edit Profile</h3>
-
           <div class="mb-4">
-            <label for="edit-bio" class="block text-gray-700 mb-1">Bio</label>
+            <label for="edit-bio" class="block text-headers mb-1">Bio</label>
             <textarea
               id="edit-bio"
               class="w-full border rounded-md p-2"
             ></textarea>
           </div>
-
           <div class="mb-4">
-            <label for="edit-avatar-url" class="block text-gray-700 mb-1"
+            <label for="edit-avatar-url" class="block text-headers mb-1"
               >Avatar URL</label
             >
             <input
@@ -128,9 +154,8 @@
               class="w-full border rounded-md p-2"
             />
           </div>
-
           <div class="mb-4">
-            <label for="edit-banner-url" class="block text-gray-700 mb-1"
+            <label for="edit-banner-url" class="block text-headers mb-1"
               >Banner URL</label
             >
             <input
@@ -139,30 +164,40 @@
               class="w-full border rounded-md p-2"
             />
           </div>
-
           <div class="flex justify-between">
             <button
               type="button"
-              id="cancel-edit"
+              id="cancel-create-listing"
               class="bg-gray-300 text-gray-800 py-2 px-4 rounded-md hover:bg-gray-400"
             >
               Cancel
             </button>
             <button
               type="submit"
-              class="bg-black text-white py-2 px-4 rounded-md hover:bg-gray-800"
+              class="bg-[#DA7756] hover:bg-[#da7756ab] text-white py-2 px-4 rounded-md"
             >
               Save Changes
             </button>
           </div>
         </form>
       </div>
-      <section id="create-listing-section" class="bg-white rounded-lg p-6 mt-8">
+      <div class="flex justify-center mb-8">
+        <button
+          id="show-create-listing"
+          class="bg-[#DA7756] hover:bg-[#da7756ab] text-white py-3 px-6 rounded-md font-medium flex items-center"
+        >
+          <i class="fas fa-plus-circle mr-2"></i> Create New Listing
+        </button>
+      </div>
+
+      <section
+        id="create-listing-section"
+        class="bg-inherit rounded-lg p-6 mb-8"
+      >
         <form id="create-listing-form" style="display: none" class="space-y-6">
-          <h2 class="text-2xl font-bold mb-4 text-center">
+          <h2 class="text-2xl font-bold mb-4 text-center text-headers">
             Create New Listing
           </h2>
-
           <div
             id="create-feedback"
             class="mb-4 p-4 rounded-md"
@@ -171,7 +206,7 @@
           <div>
             <label
               for="listing-title"
-              class="block text-sm font-medium text-gray-700 mb-1"
+              class="block text-sm font-medium text-headers mb-1"
             >
               Title *
             </label>
@@ -180,13 +215,13 @@
               id="listing-title"
               name="listing-title"
               required
-              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
             />
           </div>
           <div>
             <label
               for="listing-description"
-              class="block text-sm font-medium text-gray-700 mb-1"
+              class="block text-sm font-medium text-headers mb-1"
             >
               Description
             </label>
@@ -194,13 +229,13 @@
               id="listing-description"
               name="listing-description"
               rows="4"
-              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
             ></textarea>
           </div>
           <div>
             <label
               for="listing-tags"
-              class="block text-sm font-medium text-gray-700 mb-1"
+              class="block text-sm font-medium text-headers mb-1"
             >
               Tags
             </label>
@@ -209,23 +244,23 @@
               id="listing-tags"
               name="listing-tags"
               placeholder="vintage, console, gaming"
-              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
             />
           </div>
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">
+            <label class="block text-sm font-medium text-headers mb-1">
               Media
             </label>
             <div class="space-y-2">
               <div class="flex gap-2">
                 <input
                   type="url"
-                  class="media-url flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  class="media-url flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
                   placeholder="https://example.com/image.jpg"
                 />
                 <input
                   type="text"
-                  class="media-alt flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  class="media-alt flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
                   placeholder="Alt text"
                 />
               </div>
@@ -234,7 +269,7 @@
           <div>
             <label
               for="listing-endsAt"
-              class="block text-sm font-medium text-gray-700 mb-1"
+              class="block text-sm font-medium text-headers mb-1"
             >
               Auction End Date *
             </label>
@@ -243,7 +278,7 @@
               id="listing-endsAt"
               name="listing-endsAt"
               required
-              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
             />
           </div>
 
@@ -257,26 +292,64 @@
             </button>
             <button
               type="submit"
-              class="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              class="px-6 py-2 bg-[#DA7756] hover:bg-[#da7756ab] text-white rounded-md"
             >
-              Create Listing
+              Submit
             </button>
           </div>
         </form>
       </section>
-
-      <section id="posts-section" class="bg-white p-8 rounded-[12px] mt-8">
-        <h2 class="font-bold mb-6">Listings</h2>
-        <div
-          id="posts-grid"
-          class="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] auto-rows-fr gap-6"
-        ></div>
-      </section>
+      <div class="bg-white rounded-lg shadow-md mb-8">
+        <div class="flex border-b">
+          <button
+            id="tab-listings"
+            class="tab-button px-6 py-3 font-medium text-headers border-b-2 border-[#DA7756]"
+          >
+            Your Listings
+          </button>
+          <button
+            id="tab-bids"
+            class="tab-button px-6 py-3 font-medium text-headers border-b-2 border-transparent"
+          >
+            Your Bids
+          </button>
+          <button
+            id="tab-wins"
+            class="tab-button px-6 py-3 font-medium text-headers border-b-2 border-transparent"
+          >
+            Your Wins
+          </button>
+        </div>
+        <div id="content-listings" class="tab-content p-6">
+          <div
+            id="posts-grid"
+            class="grid grid-cols-1 md:grid-cols-2 gap-6"
+          ></div>
+          <div id="no-listings" class="text-center py-6 text-gray-500 hidden">
+            You haven't created any listings yet. Click "Create New Listing" to
+            get started.
+          </div>
+        </div>
+        <div id="content-bids" class="tab-content p-6 hidden">
+          <div id="bids-grid" class="grid gap-6"></div>
+          <div id="no-bids" class="text-center py-6 text-gray-500 hidden">
+            You haven't placed any bids yet. Browse the listings to find items
+            to bid on.
+          </div>
+        </div>
+        <div id="content-wins" class="tab-content p-6 hidden">
+          <div id="wins-grid" class="grid gap-6"></div>
+          <div id="no-wins" class="text-center py-6 text-gray-500 hidden">
+            You haven't won any auctions yet. Keep bidding to win items!
+          </div>
+        </div>
+      </div>
     </main>
-    <footer class="bg-black text-white text-center p-4 relative w-full">
-      <p>&copy; 2025 Auction House. All Rights Reserved.</p>
+    <footer class="bg-secondary text-headers text-center p-4 relative w-full">
+      <p>&copy; 2025 SNAPShop. All Rights Reserved.</p>
     </footer>
     <script type="module" src="../js/nav.js" defer></script>
     <script type="module" src="../js/auth/profile.js" defer></script>
+    <script type="module" src="../js/utils/profileTab.js" defer></script>
   </body>
 </html>

@@ -5,7 +5,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   const burgerBtn = document.getElementById("burger-menu-btn");
   const navMenu = document.getElementById("nav-menu");
 
-  // ─── BURGER MENU TOGGLE ─────────────────────────────
   if (burgerBtn && navMenu) {
     burgerBtn.addEventListener("click", (e) => {
       e.stopPropagation();
@@ -25,7 +24,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     console.warn("Menu elements not found:", { burgerBtn, navMenu });
   }
 
-  // ─── USER AUTH & PROFILE DISPLAY ────────────────────
   const nameEl = document.getElementById("nav-user-name");
   const creditsEl = document.getElementById("nav-user-credits");
   const creditsDisplay = document.getElementById("nav-user-credits-display");
@@ -81,11 +79,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       linkPath === currentPath ||
       (linkPath === "/index.html" && currentPath === "/")
     ) {
-      link.classList.add(
-        "text-yellow-400",
-        "font-semibold",
-        "border-yellow-400"
-      );
+      link.classList.add("text-headers-400", "font-bold");
     }
   });
 });

@@ -1,4 +1,3 @@
-// script.js
 import { registerUser } from "../api.js";
 import { showMessage } from "../utils/message.js";
 
@@ -43,7 +42,6 @@ registerForm.addEventListener("submit", async (e) => {
 
   try {
     const newUser = await registerUser(userData);
-    console.log("✅ Registered user:", newUser);
 
     showMessage(
       msgBanner,
