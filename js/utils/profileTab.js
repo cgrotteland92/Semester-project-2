@@ -19,24 +19,4 @@ document.addEventListener("DOMContentLoaded", function () {
       document.getElementById(`content-${tabId}`).classList.remove("hidden");
     });
   });
-
-  const editProfileButton = document.getElementById("edit-profile-button");
-  const editProfileForm = document.getElementById("edit-profile-form");
-
-  if (editProfileButton && editProfileForm) {
-    editProfileButton.addEventListener("click", () => {
-      editProfileForm.style.display = "block";
-    });
-  }
-
-  const showCreateListingButton = document.getElementById(
-    "show-create-listing"
-  );
-  const createListingForm = document.getElementById("create-listing-form");
-
-  if (showCreateListingButton && createListingForm) {
-    showCreateListingButton.addEventListener("click", () => {
-      createListingForm.style.display = "block";
-    });
-  }
 });

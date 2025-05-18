@@ -170,7 +170,6 @@ async function loadProfile(username) {
     document.getElementById("count-listings").textContent =
       data._count.listings;
     document.getElementById("count-wins").textContent = data._count.wins;
-    document.getElementById("count-credits").textContent = data.credits;
 
     const eb = document.getElementById("edit-bio");
     if (eb) eb.value = data.bio || "";
@@ -276,7 +275,7 @@ async function loadUserPosts(username) {
 function setupCreateListing() {
   const section = document.getElementById("create-listing-section");
   if (!section) {
-    console.warn("No create-listing-section found in HTML.");
+    console.warn("No create-listing-section found.");
     return;
   }
 
@@ -284,11 +283,13 @@ function setupCreateListing() {
   const form = document.getElementById("create-listing-form");
   const cancelBtn = document.getElementById("cancel-create-listing");
   const feedback = document.getElementById("create-feedback");
-
   if (!createBtn || !form || !cancelBtn || !feedback) return;
 
-  form.hidden = true;
+  // Initial state
+  section.hidden = false; // un-hide the whole block (assumes you did this in DOMContentLoaded)
   createBtn.hidden = false;
+  form.hidden = true;
+  feedback.hidden = true;
 
   createBtn.addEventListener("click", () => {
     form.hidden = false;
@@ -296,9 +297,9 @@ function setupCreateListing() {
   });
 
   cancelBtn.addEventListener("click", () => {
-    form.style.display = "none";
-    create.style.display = "";
-    feedback.style.display = "none";
+    form.hidden = true;
+    createBtn.hidden = false;
+    feedback.hidden = true;
     feedback.textContent = "";
   });
 
@@ -356,33 +357,29 @@ function setupCreateListing() {
 }
 
 function setupEditProfile(username) {
+  const btnToggle = document.getElementById("edit-profile-button");
   const section = document.getElementById("edit-profile");
-  if (!section) {
-    console.warn("No edit-profile section found in HTML.");
+  const form = document.getElementById("edit-profile-form");
+  const cancelBtn = document.getElementById("cancel-edit");
+
+  if (!btnToggle || !section || !form) {
+    console.warn("Missing edit-profile elements in HTML.");
     return;
   }
 
-  const btnToggle = document.createElement("button");
-  btnToggle.id = "edit-profile-button";
-  btnToggle.className =
-    "absolute top-4 right-4 bg-white px-4 py-2 rounded-md shadow text-headers hover:bg-gray-100";
-  const icon = document.createElement("i");
-  icon.className = "fas fa-pencil-alt mr-2";
-  btnToggle.appendChild(icon);
+  btnToggle.hidden = false;
+  section.hidden = true;
+  form.style.display = "none";
 
-  btnToggle.appendChild(document.createTextNode("Edit Profile"));
-
-  section.insertBefore(btnToggle, section.firstChild);
-
-  const form = document.getElementById("edit-profile-form");
-  const cancelBtn = document.getElementById("cancel-edit");
   btnToggle.addEventListener("click", () => {
+    section.hidden = false;
     form.style.display = "block";
-    btnToggle.style.display = "none";
+    btnToggle.hidden = true;
   });
-  cancelBtn?.addEventListener("click", () => {
+  cancelBtn.addEventListener("click", () => {
+    section.hidden = true;
     form.style.display = "none";
-    btnToggle.style.display = "block";
+    btnToggle.hidden = false;
   });
 
   form.addEventListener("submit", async (e) => {

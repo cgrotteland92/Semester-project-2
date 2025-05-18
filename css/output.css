@@ -1204,6 +1204,10 @@ video {
   background-color: rgb(255 255 255 / var(--tw-bg-opacity, 1));
 }
 
+.bg-\[\#fffff\] {
+  background-color: #fffff;
+}
+
 .bg-opacity-50 {
   --tw-bg-opacity: 0.5;
 }
@@ -1537,10 +1541,6 @@ video {
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.\[i\:\FFFD\1\1A\75C\1C\FFFD\FFFD\] {
-  i: �ݜ��;
-}
-
 .hover\:scale-105:hover {
   --tw-scale-x: 1.05;
   --tw-scale-y: 1.05;
@@ -1691,10 +1691,6 @@ video {
 }
 
 @media (min-width: 1024px) {
-  .lg\:h-\[500px\] {
-    height: 500px;
-  }
-
   .lg\:h-\[650px\] {
     height: 650px;
   }
