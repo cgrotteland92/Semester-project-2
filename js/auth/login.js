@@ -19,19 +19,21 @@ loginForm.addEventListener("submit", async (event) => {
   try {
     button.textContent = "Logging in...";
     fieldset.disabled = true;
-    const userData = await loginUser({ email, password });
 
-    if (userData) {
+    const response = await loginUser({ email, password });
+
+    if (response && response.data) {
       alert("Login successful!");
 
-      localStorage.setItem("authToken", userData.accessToken);
-      localStorage.setItem("loggedInUser", JSON.stringify(userData));
+      localStorage.setItem("loggedInUser", JSON.stringify(response.data));
 
       window.location.href = "/index.html";
+    } else {
+      throw new Error("Invalid response from server");
     }
   } catch (error) {
     console.error("Error logging in user:", error.message);
-    alert("Login failed. Please try again.");
+    alert(`Login failed: ${error.message}`);
   } finally {
     fieldset.disabled = false;
     button.textContent = previousButtonText;

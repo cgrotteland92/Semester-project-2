@@ -30,29 +30,44 @@ document.addEventListener("DOMContentLoaded", async () => {
   const profileLink = document.getElementById("nav-profile-link");
   const loginLogoutBtn = document.getElementById("nav-login-logout");
 
-  const authUser = getLoggedInUser()?.data;
+  const authUser = getLoggedInUser();
 
-  if (authUser) {
+  // Check if user is logged in and has valid data
+  const userData = authUser?.data || authUser;
+  const userName = userData?.name;
+
+  if (userName) {
     if (nameEl && creditsEl && creditsDisplay && profileLink) {
-      nameEl.textContent = authUser.name || "User";
+      nameEl.textContent = userName || "User";
       profileLink.href = `/account/profile.html?user=${encodeURIComponent(
-        authUser.name
+        userName
       )}`;
       creditsDisplay.classList.remove("hidden");
 
       try {
-        const { data: profile } = await getUserProfile(authUser.name);
+        const { data: profile } = await getUserProfile(userName);
         const credits =
           typeof profile.credits === "number" ? profile.credits : 0;
         creditsEl.textContent = `${credits.toLocaleString()} 🪙`;
       } catch (error) {
         console.error("Error fetching user profile:", error);
+
+        if (
+          error.message.includes("Authentication") ||
+          error.message.includes("401")
+        ) {
+          console.log("User needs to re-authenticate");
+          logoutUser();
+          return;
+        }
+
         creditsEl.textContent = "0 🪙";
       }
     }
 
     if (loginLogoutBtn) {
       loginLogoutBtn.textContent = "Sign Out";
+      loginLogoutBtn.href = "#";
       loginLogoutBtn.addEventListener("click", handleLogout);
     }
   } else {
@@ -68,7 +83,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     e.preventDefault();
     e.stopPropagation();
     logoutUser();
-    window.location.href = "/account/login.html";
   }
 
   const currentPath = window.location.pathname;

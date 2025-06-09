@@ -5,7 +5,9 @@
 export function getLoggedInUser() {
   try {
     const raw = localStorage.getItem("loggedInUser");
-    return raw ? JSON.parse(raw) : null;
+    const parsed = raw ? JSON.parse(raw) : null;
+    if (!parsed) return null;
+    return parsed.data || parsed;
   } catch (error) {
     console.warn("Failed to parse loggedInUser, clearing invalid data.", error);
     localStorage.removeItem("loggedInUser");
