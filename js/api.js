@@ -3,10 +3,23 @@ const profilesURL = `${BASE_API_URL}/auction/profiles`;
 
 export const headers = {
   "Content-Type": "application/json",
-  Authorization:
-    "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiY2dyb3R0ZWxhbmQiLCJlbWFpbCI6ImNocmdybzAyMTIyQHN0dWQubm9yb2ZmLm5vIiwiaWF0IjoxNzQ0MzAwNDgyfQ.n3AMABfJbCbzD3ROEmeh77Gn7ETHGPkA-rY6rvfQ9VE",
   "X-Noroff-API-Key": "0b0117c2-c40e-44f7-aa5a-6f18167b328c",
 };
+
+function authHeaders() {
+  const token = localStorage.getItem("authToken");
+  if (!token) throw new Error("No auth token, please login first");
+  return {
+    ...headers,
+    Authorization: `Bearer ${token}`,
+  };
+}
+
+// Helper function to check if user is authenticated
+function isAuthenticated() {
+  return localStorage.getItem("authToken") !== null;
+}
+
 /* --------------------- AUTH & USER ENDPOINTS --------------------- */
 /**
  * Fetch a single user profile by name.
@@ -15,10 +28,22 @@ export const headers = {
  */
 export async function getUserProfile(profileName) {
   try {
+    // Check if user is authenticated first
+    if (!isAuthenticated()) {
+      throw new Error("Authentication required. Please login first.");
+    }
+
     const response = await fetch(`${profilesURL}/${profileName}`, {
       method: "GET",
-      headers,
+      headers: authHeaders(),
     });
+
+    if (response.status === 401) {
+      // Token might be expired, clear it
+      localStorage.removeItem("authToken");
+      throw new Error("Authentication expired. Please login again.");
+    }
+
     if (!response.ok) {
       throw new Error(
         `Failed to fetch profile (${response.status}): ${response.statusText}`
@@ -38,10 +63,20 @@ export async function getUserProfile(profileName) {
  */
 export async function getUserPosts(profileName) {
   try {
+    if (!isAuthenticated()) {
+      throw new Error("Authentication required. Please login first.");
+    }
+
     const response = await fetch(`${profilesURL}/${profileName}/listings`, {
       method: "GET",
-      headers,
+      headers: authHeaders(),
     });
+
+    if (response.status === 401) {
+      localStorage.removeItem("authToken");
+      throw new Error("Authentication expired. Please login again.");
+    }
+
     if (!response.ok) {
       throw new Error("Failed to fetch user posts: " + response.status);
     }
@@ -53,18 +88,28 @@ export async function getUserPosts(profileName) {
 }
 
 /**
- * Update a user’s profile (bio, avatar, banner).
+ * Update a user's profile (bio, avatar, banner).
  * @param {string} profileName
  * @param {Object} payload
  * @returns {Promise<Object>}
  */
 export async function updateUserProfile(profileName, payload) {
   try {
+    if (!isAuthenticated()) {
+      throw new Error("Authentication required. Please login first.");
+    }
+
     const res = await fetch(`${profilesURL}/${profileName}`, {
       method: "PUT",
-      headers,
+      headers: authHeaders(),
       body: JSON.stringify(payload),
     });
+
+    if (res.status === 401) {
+      localStorage.removeItem("authToken");
+      throw new Error("Authentication expired. Please login again.");
+    }
+
     if (!res.ok) {
       const text = await res.text();
       throw new Error(`Failed to update profile (${res.status}): ${text}`);
@@ -97,7 +142,7 @@ export async function registerUser(userData) {
 }
 
 /**
- * Login a user.
+ * Login a user and store the token.
  * @param {Object} userData
  */
 export async function loginUser(userData) {
@@ -107,11 +152,21 @@ export async function loginUser(userData) {
       headers,
       body: JSON.stringify(userData),
     });
-    if (!response.ok)
+
+    if (!response.ok) {
       throw new Error("Failed to login user: " + response.status);
-    return await response.json();
+    }
+
+    const result = await response.json();
+
+    if (result.data && result.data.accessToken) {
+      localStorage.setItem("authToken", result.data.accessToken);
+    }
+
+    return result;
   } catch (error) {
     console.error("Error logging in user:", error.message);
+    throw error;
   }
 }
 
@@ -129,6 +184,10 @@ export async function loginUser(userData) {
  */
 export async function createListing(listingData) {
   try {
+    if (!isAuthenticated()) {
+      throw new Error("Authentication required. Please login first.");
+    }
+
     if (!listingData.title) {
       throw new Error("Listing title is required");
     }
@@ -139,9 +198,14 @@ export async function createListing(listingData) {
 
     const response = await fetch(`${BASE_API_URL}/auction/listings`, {
       method: "POST",
-      headers,
+      headers: authHeaders(),
       body: JSON.stringify(listingData),
     });
+
+    if (response.status === 401) {
+      localStorage.removeItem("authToken");
+      throw new Error("Authentication expired. Please login again.");
+    }
 
     if (!response.ok) {
       const errorData = await response.json();
@@ -166,14 +230,24 @@ export async function createListing(listingData) {
  * @returns {Promise<{data:Object}>}
  */
 export async function updateListing(id, listingData) {
+  if (!isAuthenticated()) {
+    throw new Error("Authentication required. Please login first.");
+  }
+
   const res = await fetch(
     `${BASE_API_URL}/auction/listings/${encodeURIComponent(id)}`,
     {
       method: "PUT",
-      headers,
+      headers: authHeaders(), // Use authHeaders for authenticated requests
       body: JSON.stringify(listingData),
     }
   );
+
+  if (res.status === 401) {
+    localStorage.removeItem("authToken");
+    throw new Error("Authentication expired. Please login again.");
+  }
+
   if (!res.ok) {
     const err = await res.json().catch(() => ({}));
     const msg = err.errors?.[0]?.message || res.statusText;
@@ -181,19 +255,30 @@ export async function updateListing(id, listingData) {
   }
   return res.json();
 }
+
 /**
  * Deletes a listing by ID
  * @param {string} id - The ID of the listing to delete
  * @returns {Promise}
  */
 export async function deleteListing(id) {
+  if (!isAuthenticated()) {
+    throw new Error("Authentication required. Please login first.");
+  }
+
   const res = await fetch(
     `${BASE_API_URL}/auction/listings/${encodeURIComponent(id)}`,
     {
       method: "DELETE",
-      headers,
+      headers: authHeaders(), // Use authHeaders for authenticated requests
     }
   );
+
+  if (res.status === 401) {
+    localStorage.removeItem("authToken");
+    throw new Error("Authentication expired. Please login again.");
+  }
+
   if (!res.ok) {
     const err = await res.json().catch(() => ({}));
     throw new Error(
@@ -216,7 +301,7 @@ export async function fetchPosts(params = {}) {
   try {
     const response = await fetch(url, {
       method: "GET",
-      headers,
+      headers, // Public endpoint, no auth required
     });
     if (!response.ok) {
       throw new Error(`Failed to fetch listings (${response.status})`);
@@ -241,7 +326,7 @@ export async function getSingleListing(id, options = {}) {
   const url = `${BASE_API_URL}/auction/listings/${encodeURIComponent(
     id
   )}${query}`;
-  const response = await fetch(url, { headers });
+  const response = await fetch(url, { headers }); // Public endpoint
   if (!response.ok) {
     const err = await response.json().catch(() => ({}));
     throw new Error(
@@ -260,14 +345,24 @@ export async function getSingleListing(id, options = {}) {
  * @returns {Promise<{ data: Object }>}
  */
 export async function placeBid(listingId, amount) {
+  if (!isAuthenticated()) {
+    throw new Error("Authentication required. Please login first.");
+  }
+
   const url = `${BASE_API_URL}/auction/listings/${encodeURIComponent(
     listingId
   )}/bids`;
   const resp = await fetch(url, {
     method: "POST",
-    headers,
+    headers: authHeaders(),
     body: JSON.stringify({ amount }),
   });
+
+  if (resp.status === 401) {
+    localStorage.removeItem("authToken");
+    throw new Error("Authentication expired. Please login again.");
+  }
+
   if (!resp.ok) {
     let msg = resp.statusText;
     try {
@@ -286,12 +381,22 @@ export async function placeBid(listingId, amount) {
  * @returns {Promise<{ data: Object }>}
  */
 export async function getUserBids(profileName) {
+  if (!isAuthenticated()) {
+    throw new Error("Authentication required. Please login first.");
+  }
+
   const url = new URL(
     `${BASE_API_URL}/auction/profiles/${encodeURIComponent(profileName)}/bids`
   );
   url.searchParams.append("_listings", "true");
 
-  const res = await fetch(url.toString(), { headers });
+  const res = await fetch(url.toString(), { headers: authHeaders() });
+
+  if (res.status === 401) {
+    localStorage.removeItem("authToken");
+    throw new Error("Authentication expired. Please login again.");
+  }
+
   if (!res.ok) {
     const err = await res.json().catch(() => ({}));
     throw new Error(
@@ -307,11 +412,21 @@ export async function getUserBids(profileName) {
  * @returns {Promise<{ data: Array }>}
  */
 export async function getUserWins(username) {
+  if (!isAuthenticated()) {
+    throw new Error("Authentication required. Please login first.");
+  }
+
   const url = `${BASE_API_URL}/auction/profiles/${encodeURIComponent(
     username
   )}/wins`;
   try {
-    const res = await fetch(url, { method: "GET", headers });
+    const res = await fetch(url, { method: "GET", headers: authHeaders() });
+
+    if (res.status === 401) {
+      localStorage.removeItem("authToken");
+      throw new Error("Authentication expired. Please login again.");
+    }
+
     if (!res.ok) {
       throw new Error(`Failed to fetch wins (${res.status})`);
     }

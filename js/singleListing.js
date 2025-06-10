@@ -33,11 +33,6 @@ function renderBidHistory(bids) {
   sortedBids.forEach((bid) => {
     const item = document.createElement("div");
     item.className = "flex justify-between py-2 border-b";
-  });
-
-  sortedBids.forEach((bid) => {
-    const item = document.createElement("div");
-    item.className = "flex justify-between py-2 border-b";
 
     const bidderLink = document.createElement("a");
     const name = bid.bidder?.name || bid.bidderEmail || "Unknown";
@@ -104,14 +99,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.getElementById("listing-title").textContent = data.title;
     document.getElementById("listing-description").textContent =
       data.description || "";
-    const tagsDiv = document.getElementById("listing-tags");
-    tagsDiv.innerHTML = "";
-    (data.tags || []).forEach((tag) => {
-      const span = document.createElement("span");
-      span.textContent = tag;
-      span.className = "px-2 py-1 bg-[#DA7756] text-white rounded-full text-xs";
-      tagsDiv.appendChild(span);
-    });
     document.getElementById("listing-created").textContent = new Date(
       data.created
     ).toLocaleString();
@@ -159,6 +146,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     const bidForm = document.getElementById("bid-form");
     const bidMessage = document.getElementById("bid-message");
 
+    if (!currentUsername) {
+      placeBidBtn.style.display = "none";
+      return;
+    }
     if (currentUsername === sellerName) {
       placeBidBtn.style.display = "none";
     } else {

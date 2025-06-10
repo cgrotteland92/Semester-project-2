@@ -16,7 +16,10 @@ let currentProfileData = null;
 document.addEventListener("DOMContentLoaded", () => {
   const params = new URLSearchParams(window.location.search);
   const paramUser = params.get("user");
-  const me = getLoggedInUser()?.data?.name;
+
+  const userObj = getLoggedInUser();
+  const me = userObj?.name || userObj?.data?.name;
+
   const username = paramUser || me;
 
   if (!username) {
