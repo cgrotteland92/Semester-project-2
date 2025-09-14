@@ -26,9 +26,11 @@ registerForm.addEventListener("submit", async (e) => {
   };
 
   if (!validateEmail(userData.email)) {
+    msgBanner.classList.remove("hidden");
     return showMessage(msgBanner, "Email must end with @stud.noroff.no", true);
   }
   if (!validatePassword(userData.password)) {
+    msgBanner.classList.remove("hidden");
     return showMessage(
       msgBanner,
       "Password must be at least 8 characters",
